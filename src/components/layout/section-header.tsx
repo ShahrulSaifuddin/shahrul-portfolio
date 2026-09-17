@@ -2,8 +2,10 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * The eyebrow → h2 → description block that opens every section. Keeps
+ * The eyebrow → heading → description block that opens every section. Keeps
  * heading ids consistent with `aria-labelledby` on the enclosing `<section>`.
+ * Renders an `<h2>` by default; pass `as="h1"` when this header is the
+ * page's visible title (e.g. `/projects`) so it doubles as the page's `<h1>`.
  */
 export function SectionHeader({
   id,
@@ -12,6 +14,7 @@ export function SectionHeader({
   description,
   align = 'left',
   className,
+  as = 'h2',
 }: {
   id: string
   eyebrow: string
@@ -19,7 +22,9 @@ export function SectionHeader({
   description?: string
   align?: 'left' | 'center'
   className?: string
+  as?: 'h1' | 'h2'
 }): React.ReactElement {
+  const Heading = as
   return (
     <div
       className={cn(
@@ -31,12 +36,16 @@ export function SectionHeader({
       <p className="text-xs font-mono uppercase tracking-[0.18em] text-muted-foreground">
         {eyebrow}
       </p>
-      <h2
+      <Heading
         id={`${id}-heading`}
-        className="text-2xl font-semibold tracking-[-0.02em] text-foreground sm:text-3xl"
+        className={
+          as === 'h1'
+            ? 'text-3xl sm:text-4xl font-semibold tracking-[-0.02em] text-foreground'
+            : 'text-2xl font-semibold tracking-[-0.02em] text-foreground sm:text-3xl'
+        }
       >
         {title}
-      </h2>
+      </Heading>
       {description ? (
         <p
           className={cn(

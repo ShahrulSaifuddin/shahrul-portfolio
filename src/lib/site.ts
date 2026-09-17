@@ -13,7 +13,12 @@ export const siteConfig = {
   // Placeholder — the owner should point this at the real production domain
   // before deploying. Not supplied by the content brief.
   url: 'https://shahrulsaifuddin.com',
-  ogImage: '/og-image.png',
+  // Served by the `src/app/opengraph-image.tsx` file convention, which Next
+  // wires into every page's metadata automatically — this string is kept
+  // only to satisfy `SiteConfig` and for anything that wants the path as
+  // plain text; it is intentionally NOT referenced in `layout.tsx`'s
+  // `openGraph.images` / `twitter.images` (see comment there).
+  ogImage: '/opengraph-image',
   nav: [
     { label: 'Projects', href: '/projects' },
     { label: 'Performance', href: '/performance' },

@@ -9,10 +9,18 @@
  * portfolio contact form, but a real production system needs a durable,
  * shared store (e.g. Upstash Redis, Vercel KV, Cloudflare rate limiting)
  * keyed the same way (per IP, fixed or sliding window).
+ *
+ * Eviction: entries are never proactively expired on a timer (no
+ * `setInterval` — that would keep the event loop alive and leak across hot
+ * reloads). Instead, `checkRateLimit` opportunistically sweeps expired
+ * entries out of the map every `SWEEP_INTERVAL_CALLS` calls, so a
+ * long-lived process (e.g. this app under PM2 on a VPS) doesn't accumulate
+ * one `Map` entry per distinct IP forever.
  */
 
 const WINDOW_MS = 10 * 60 * 1000 // 10 minutes
 const MAX_REQUESTS_PER_WINDOW = 5
+const SWEEP_INTERVAL_CALLS = 100
 
 interface RateLimitEntry {
   count: number
@@ -20,6 +28,17 @@ interface RateLimitEntry {
 }
 
 const hits = new Map<string, RateLimitEntry>()
+
+let callsSinceSweep = 0
+
+/** Removes expired entries from `hits`. Called opportunistically, not on a timer. */
+function sweepExpired(now: number): void {
+  for (const [key, entry] of hits) {
+    if (now >= entry.resetAt) {
+      hits.delete(key)
+    }
+  }
+}
 
 export interface RateLimitResult {
   ok: boolean
@@ -35,6 +54,12 @@ export interface RateLimitResult {
  * first request in the window fails every subsequent request until reset.
  */
 export function checkRateLimit(key: string, now: number = Date.now()): RateLimitResult {
+  callsSinceSweep += 1
+  if (callsSinceSweep >= SWEEP_INTERVAL_CALLS || hits.size > SWEEP_INTERVAL_CALLS) {
+    callsSinceSweep = 0
+    sweepExpired(now)
+  }
+
   const existing = hits.get(key)
 
   if (!existing || now >= existing.resetAt) {

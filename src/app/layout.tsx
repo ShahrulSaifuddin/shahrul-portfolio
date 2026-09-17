@@ -30,19 +30,23 @@ export const metadata: Metadata = {
     template: `%s — ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  // No explicit `images` here on purpose: `src/app/opengraph-image.tsx` uses
+  // Next's file-convention metadata API, which auto-generates and injects
+  // the correct `og:image` / `twitter:image` tags (with size and type) for
+  // every page. Setting `images` here would either point at the removed
+  // static `/og-image.png` (which never existed and 404'd every share) or
+  // duplicate what the file convention already emits.
   openGraph: {
     type: 'website',
     url: siteConfig.url,
     title: siteConfig.title,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [{ url: siteConfig.ogImage }],
   },
   twitter: {
     card: 'summary_large_image',
     title: siteConfig.title,
     description: siteConfig.description,
-    images: [siteConfig.ogImage],
   },
 }
 
@@ -74,7 +78,6 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
       </head>

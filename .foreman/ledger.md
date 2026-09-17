@@ -57,10 +57,54 @@ T3a never needs to touch `layout.tsx`. Keeps wave 3 write sets disjoint.
 |---|---|---|---|---|---|---|---|
 | T0 | 1 | sonnet | r1 | DONE | foreman re-ran `npm run build` (exit 0) + `tsc --noEmit` (exit 0) | commit 2f75391; build log bz7t58qif | 2026-09-17 |
 | T1 | 1 | sonnet | r1 | DONE | foreman verified 19 perf items / 5 demos / 4 projects by regex; read `appliedHere` for the 5 highest-risk entries — all honest | commit e72eda0 | 2026-09-17 |
-| T2a | 1 | sonnet | r1 | DISPATCHED | — | baseline e72eda0 | 2026-09-17 |
-| T2b | 1 | sonnet | r1 | DISPATCHED | — | baseline e72eda0 | 2026-09-17 |
-| T2c | 1 | sonnet | r1 | DISPATCHED | — | baseline e72eda0 | 2026-09-17 |
-| T2d | 1 | sonnet | r1 | DISPATCHED | — | baseline e72eda0 | 2026-09-17 |
+| T2a | 1 | sonnet | r1 | DONE | foreman: full `next build` 0, `tsc` 0; read globals.css + layout.tsx + section-header.tsx | commit f2be8a5 | 2026-09-17 |
+| T2b | 1 | sonnet | r1 | DONE | same build; read profile-avatar.tsx | commit f2be8a5 | 2026-09-17 |
+| T2c | 1 | sonnet | r1 | DONE | same build; read [slug]/page.tsx link markup | commit f2be8a5 | 2026-09-17 |
+| T2d | 1 | sonnet | r1 | DONE_WITH_CONCERNS → concerns resolved into FIX1 | same build; read api/contact/route.ts + rate-limit.ts | commit f2be8a5 | 2026-09-17 |
+| FIX1 | 1 | sonnet | r1 | DISPATCHED | — | baseline f2be8a5 | 2026-09-17 |
+| T3a | 1 | sonnet | r1 | DISPATCHED | — | baseline f2be8a5 | 2026-09-17 |
+
+### Wave 2 review findings (batched into FIX1 — one ticket, not one worker per finding)
+
+Sources are marked because it matters who caught what:
+
+| # | Finding | Source |
+|---|---|---|
+| F1 | Nested `<main>` landmarks on /performance and /contact | T2d self-reported; foreman confirmed by grep |
+| F2 | light `--primary` 3.92:1 — CTA label fails 4.5:1 | **foreman measurement (defect in the foreman's own spec)** |
+| F3 | light `--brand` exactly 4.50:1, no margin | **foreman measurement (own spec)** |
+| F4 | light `--ring` must track corrected primary | **foreman measurement (own spec)** |
+| F5 | `--input` 1.26:1 / 1.39:1 — fails WCAG 1.4.11 (3:1) | **foreman measurement (own spec)** |
+| F6 | /projects uses sr-only h1 + visible h2 | T2c self-reported |
+| F7 | rate-limit Map never evicts — leaks under PM2 | foreman code review |
+| F8 | contact/page.tsx `rel` missing `noopener` | foreman code review |
+
+Four of eight findings were defects in the **foreman-authored design spec**, not worker error. The
+workers implemented bad numbers faithfully, and the spec even carried a comment asserting the values
+passed. Only converting OKLCH → sRGB and computing real ratios caught it. Recorded because the
+lesson is the point: reviewing a spec by reading it would have shipped an inaccessible primary CTA.
+
+### Non-findings — measured, then deliberately NOT acted on
+
+- **Home page First Load JS = 252 kB raw.** Measured the built chunks: gzip ratio ~3.2:1, so home is
+  **≈79 kB gzipped** against the brief's "<200 KB gzipped" target. A framer-motion → CSS refactor was
+  scoped and then dropped as unjustified. Measuring first prevented a large speculative refactor.
+
+### Process incident
+
+A Wave 2 worker started `npm run dev` and never stopped it. The dev server held `.next` for ~20
+minutes and starved the foreman's production build (which was killed at exit 255; T2d had already hit
+the same thing as `EPERM ... .next\trace`). Foreman identified the processes by command line via
+`Get-CimInstance Win32_Process`, confirmed they were the project's dev server rather than the agent
+runtime, terminated them, and re-ran a clean build. **Every wave-3 ticket now carries an explicit
+"do not start a dev server" instruction.** Logged because a stray process silently invalidating a
+verification run is exactly the failure mode the reconciliation step exists to catch.
+
+### Trivial change made by the foreman directly (verifier-exempt)
+
+Removed an unused `// eslint-disable-next-line react/no-danger` directive at `src/app/layout.tsx:77`
+that the build flagged as a warning. Single line, no logic content — the one category
+verification.md exempts from the blind-verifier requirement.
 
 ### T0 verification note (deviation from the default protocol, recorded deliberately)
 

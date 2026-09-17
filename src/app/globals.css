@@ -60,7 +60,9 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.205 0.005 285);
   /* BRAND teal — shadcn's default <Button> is the primary CTA. */
-  --primary: oklch(0.58 0.12 168);
+  /* Darkened from 0.58 to 0.53: measured 3.92:1 with --primary-foreground, below
+     the 4.5:1 text-contrast requirement. 0.53 measures 4.76:1. */
+  --primary: oklch(0.53 0.12 168);
   --primary-foreground: oklch(0.99 0.01 168);
   --secondary: oklch(0.968 0.002 285);
   --secondary-foreground: oklch(0.205 0.005 285);
@@ -70,11 +72,20 @@
   --accent: oklch(0.968 0.002 285);
   --accent-foreground: oklch(0.205 0.005 285);
   --destructive: oklch(0.58 0.21 27);
+  /* Decorative hairline dividers between cards — NOT a form-control border, not
+     covered by WCAG 1.4.11. Deliberately lower contrast than --input; do not
+     "tidy" these back to the same value. */
   --border: oklch(0.918 0.004 285);
-  --input: oklch(0.918 0.004 285);
-  --ring: oklch(0.58 0.12 168);
+  /* Form-control (input) border — governed by WCAG 1.4.11 (3:1 non-text
+     contrast). Measured 1.26:1 at the old value; 0.65 measures 3.21:1.
+     Deliberately different from --border; do not merge them. */
+  --input: oklch(0.65 0.004 285);
+  /* Tracks the corrected --primary above. */
+  --ring: oklch(0.53 0.12 168);
   /* Brand tokens: rails, active indicators, metric highlights, badges — not buttons. */
-  --brand: oklch(0.52 0.12 168);
+  /* Darkened from 0.52 to 0.50: measured exactly 4.50:1 on --brand-muted (no
+     margin). 0.50 measures 4.87:1. */
+  --brand: oklch(0.50 0.12 168);
   --brand-foreground: oklch(0.99 0.01 168);
   --brand-muted: oklch(0.955 0.03 168);
   --success: oklch(0.52 0.12 168);
@@ -112,8 +123,14 @@
   --accent: oklch(0.265 0.005 285);
   --accent-foreground: oklch(0.955 0.002 285);
   --destructive: oklch(0.66 0.19 27);
+  /* Decorative hairline dividers between cards — NOT a form-control border, not
+     covered by WCAG 1.4.11. Deliberately lower contrast than --input; do not
+     "tidy" these back to the same value. */
   --border: oklch(0.295 0.006 285);
-  --input: oklch(0.305 0.006 285);
+  /* Form-control (input) border — governed by WCAG 1.4.11 (3:1 non-text
+     contrast). Measured 1.39:1 at the old value; 0.52 measures 3.49:1.
+     Deliberately different from --border; do not merge them. */
+  --input: oklch(0.52 0.006 285);
   --ring: oklch(0.76 0.13 168);
   --brand: oklch(0.78 0.13 168);
   --brand-foreground: oklch(0.17 0.03 168);

@@ -17,7 +17,7 @@ export default function ContactPage() {
   const telHref = `tel:${profile.phone.replace(/[^+\d]/g, '')}`
 
   return (
-    <Container as="main" className="py-20 sm:py-28 lg:py-32">
+    <Container as="div" className="py-20 sm:py-28 lg:py-32">
       <SectionHeader
         id="contact"
         eyebrow="Get in touch"
@@ -71,7 +71,7 @@ export default function ContactPage() {
               <a
                 href={profile.github}
                 target="_blank"
-                rel="noreferrer"
+                rel="noreferrer noopener"
                 className="flex items-center gap-3 rounded-lg border border-border p-3 text-sm text-muted-foreground transition-colors hover:border-accent/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <GitHubIcon className="size-4 shrink-0" aria-hidden="true" />
