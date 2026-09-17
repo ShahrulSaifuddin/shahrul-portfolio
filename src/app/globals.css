@@ -167,4 +167,15 @@
       scroll-behavior: smooth;
     }
   }
+  /* Applies to every shadcn `<Skeleton>` (it sets data-slot="skeleton") site-
+     wide — the route loading.tsx files and the /performance skeleton demo —
+     without editing the read-only ui/skeleton.tsx primitive itself. A pulsing
+     placeholder is exactly the kind of non-essential motion
+     prefers-reduced-motion asks sites to drop; a static muted block still
+     communicates "loading" without the animation. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-slot='skeleton'] {
+      animation: none;
+    }
+  }
 }

@@ -74,7 +74,7 @@ export const performanceItems = [
     detail:
       'A skeleton mirrors the layout of the content that is about to arrive, so the page never jumps and the wait reads as shorter than an empty screen or a spinner would.',
     appliedHere:
-      'Demonstrated live on this page: a skeleton placeholder stands in for a simulated slow-loading list before the real content renders.',
+      "Applied site-wide: every route (/, /projects, /projects/[slug], /performance, /contact) has a Next.js loading.tsx that renders instantly on navigation, sized to match that page's real content so nothing shifts when it arrives. Also demonstrated interactively below with a simulated slow-loading list.",
     evidence: null,
     demo: 'skeleton',
     icon: 'Rows3',
@@ -203,7 +203,7 @@ export const performanceItems = [
     detail:
       'React.memo, useMemo and useCallback stop a component from re-rendering when its props have not meaningfully changed, which matters in lists and dashboards where one state update would otherwise cascade through every child.',
     appliedHere:
-      'Demonstrated live on this page: a render counter compares a memoized component against an unmemoized one under the same parent updates.',
+      "`ProjectCard` (used on / and /projects) is wrapped in React.memo: /projects's search box re-renders its parent on every keystroke, and without memo every visible card would re-render along with it for no reason. Also demonstrated live below with a render counter comparing a memoized component against an unmemoized one.",
     evidence: null,
     demo: 'memo',
     icon: 'Repeat',
@@ -229,8 +229,8 @@ export const performanceItems = [
     detail:
       'Loading every image on a page upfront wastes bandwidth on content the visitor may never scroll to. loading="lazy" (or an IntersectionObserver) defers the request until the image is near the viewport, prioritizing what is visible first.',
     appliedHere:
-      'Demonstrated live on this page, and applied site-wide via next/image, which lazy-loads every image except the hero avatar (marked priority so it does not delay LCP).',
-    evidence: 'next/image default loading="lazy", hero avatar excluded via priority',
+      'The only image on this site today is the hero portrait, and it is deliberately excluded from lazy loading — marked `priority` because it is the LCP element, so eager-loading it is the correct call, not an oversight. next/image defaults every other image to loading="lazy" automatically, which would apply the moment a second image is added. Demonstrated live below with two boxes that show what a lazy image actually does.',
+    evidence: 'next/image default loading="lazy"; hero avatar deliberately excluded via priority',
     demo: 'lazy-image',
     icon: 'Images',
   },

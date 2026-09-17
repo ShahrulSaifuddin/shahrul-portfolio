@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import Link from 'next/link'
 import { motion, useReducedMotion } from 'framer-motion'
 
@@ -17,7 +18,16 @@ const METRIC_GRID_COLS: Record<number, string> = {
 const MAX_VISIBLE_TECH = 5
 const MAX_VISIBLE_METRICS = 3
 
-export function ProjectCard({ project, className }: { project: Project; className?: string }) {
+/**
+ * Wrapped in `React.memo`: `ProjectFilter` re-renders on every keystroke (its
+ * `query` state), but `project` objects come from the module-level `projects`
+ * array and keep a stable reference across renders where a given card is
+ * still in the filtered list. Without memo, every visible card would
+ * re-render on every keystroke for no reason — this is the real, live
+ * instance of the pattern demonstrated on /performance's "Reduce Unnecessary
+ * Re-Renders" item, not just a contrived demo.
+ */
+function ProjectCardImpl({ project, className }: { project: Project; className?: string }) {
   const shouldReduceMotion = useReducedMotion()
 
   const visibleMetrics = project.metrics.slice(0, MAX_VISIBLE_METRICS)
@@ -93,3 +103,5 @@ export function ProjectCard({ project, className }: { project: Project; classNam
     </motion.div>
   )
 }
+
+export const ProjectCard = memo(ProjectCardImpl)

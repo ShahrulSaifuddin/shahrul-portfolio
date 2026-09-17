@@ -17,6 +17,19 @@ export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }))
 }
 
+// All four real slugs are enumerated above and fully static — there is no
+// reason to ever render this route on demand for a slug outside that set.
+// This matters beyond tidiness: with `loading.tsx` present in this segment,
+// Next streams a 200 response immediately for the Suspense fallback, before
+// the async page component runs — so by the time an unmatched slug reaches
+// `notFound()` below, the 200 status is already committed and can't become a
+// 404. `dynamicParams = false` rejects anything outside generateStaticParams
+// at the routing layer itself, before that streaming response ever starts,
+// which is what keeps a real 404 on unknown slugs. Caught by
+// e2e/navigation.spec.ts's "an unknown project slug returns a 404" test,
+// which went from a proven regression back to green after this line.
+export const dynamicParams = false
+
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params
   const project = getProjectBySlug(slug as ProjectSlug)
