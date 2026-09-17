@@ -92,9 +92,15 @@ See [`.env.example`](./.env.example) for the full, commented list. In short:
 |---|---|---|
 | `RESEND_API_KEY` | No, but needed for the contact form to actually send email | The site still builds and runs. `/api/contact` returns HTTP 503 ("Email delivery is not configured on this deployment yet.") instead of sending, and logs the submission to the server console outside production. |
 | `CONTACT_FROM_EMAIL` | No | Falls back to Resend's shared sandbox sender, `Portfolio Contact <onboarding@resend.dev>`. |
+| `NEXT_PUBLIC_ANALYTICS_SRC` | No | Analytics mount (`src/components/analytics.tsx`) renders nothing and no third-party script loads. |
+| `NEXT_PUBLIC_ANALYTICS_DOMAIN` | No | Same as above — both must be set together or analytics stays disabled. |
 
-No `NEXT_PUBLIC_*` variables are currently used. If one is ever added, remember it is inlined into
-the client bundle and visible to anyone viewing the site — never put a secret behind that prefix.
+`NEXT_PUBLIC_ANALYTICS_SRC` and `NEXT_PUBLIC_ANALYTICS_DOMAIN` are `NEXT_PUBLIC_*` and are therefore
+inlined into the client bundle and visible to anyone viewing the site — that's fine here since
+neither is a secret. They enable a privacy-first, cookieless analytics script (no Google Analytics;
+see `.env.example` for details) and are both optional: leaving either unset disables analytics
+entirely, with zero third-party scripts loaded. Never put an actual secret behind a `NEXT_PUBLIC_`
+name.
 
 ## Deployment
 

@@ -38,6 +38,15 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Reads the design tokens live out of src/app/globals.css and computes
+      # real WCAG ratios (4.5:1 text, 3:1 non-text). Exits non-zero on any
+      # failure, so a token edit that breaks contrast fails the build instead
+      # of shipping. An earlier version of this checker hardcoded the token
+      # values, drifted out of sync with the CSS, and "passed" while proving
+      # nothing -- hence parsing the stylesheet at run time.
+      - name: Contrast gate (WCAG 2.1 AA)
+        run: node scripts/check-contrast.mjs
+
       - name: Build
         run: npm run build
 

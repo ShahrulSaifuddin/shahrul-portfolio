@@ -105,7 +105,7 @@ export function ProjectFilter({ projects, allTech }: ProjectFilterProps) {
                 onClick={() => toggleTech(tech)}
                 aria-pressed={isActive}
                 className={cn(
-                  'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border px-3 py-1.5 text-xs font-mono transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none',
+                  'flex min-h-12 min-w-12 items-center justify-center rounded-full border px-3 py-1.5 text-xs font-mono transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none',
                   isActive
                     ? 'border-brand/40 bg-brand-muted text-brand'
                     : 'border-border bg-muted text-muted-foreground hover:bg-accent',

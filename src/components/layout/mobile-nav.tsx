@@ -45,7 +45,7 @@ export function MobileNav({
           type="button"
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
-          className="inline-flex size-11 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:hidden"
+          className="inline-flex size-12 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:hidden"
         >
           <Menu className="size-5" aria-hidden="true" />
         </button>
@@ -82,7 +82,7 @@ export function MobileNav({
             target="_blank"
             rel="noreferrer noopener"
             onClick={() => setOpen(false)}
-            className="inline-flex size-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex size-12 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-label="GitHub profile"
           >
             <GitHubIcon className="size-5" />

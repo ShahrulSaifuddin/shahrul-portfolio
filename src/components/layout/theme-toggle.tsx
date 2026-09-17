@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes'
 import { Moon, Sun } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const HIT_AREA = 'inline-flex size-11 items-center justify-center rounded-lg'
+const HIT_AREA = 'inline-flex size-12 items-center justify-center rounded-lg'
 const FOCUS_RING =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
 

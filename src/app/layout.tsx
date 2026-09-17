@@ -8,6 +8,7 @@ import { Navigation } from '@/components/layout/navigation'
 import { Footer } from '@/components/layout/footer'
 import { ScrollProgress } from '@/components/layout/scroll-progress'
 import { BackToTop } from '@/components/layout/back-to-top'
+import { Analytics } from '@/components/analytics'
 import { siteConfig } from '@/lib/site'
 import { profile } from '@/lib/data/profile'
 
@@ -109,6 +110,7 @@ export default function RootLayout({
             <Toaster />
           </TooltipProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )

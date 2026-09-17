@@ -37,16 +37,24 @@ PowerShell for shell work and Read/Write/Edit tools for file work.
 
 ## Tasks
 
-| id | state | owned paths | job id |
+| id | state | owned paths | commit |
 |---|---|---|---|
-| T0 | VERIFIED | (repo root scaffold) | sync |
-| T1 | VERIFIED | src/lib/data/**, src/lib/types.ts, src/lib/site.ts | sync |
-| T2a | DISPATCHED | src/app/layout.tsx, src/app/globals.css, src/lib/motion.ts, src/components/layout/**, src/components/motion/**, src/components/providers/** | wave2-a |
-| T2b | DISPATCHED | src/app/page.tsx, src/components/sections/**, src/components/profile-avatar.tsx | wave2-b |
-| T2c | DISPATCHED | src/app/projects/**, src/components/projects/** | wave2-c |
-| T2d | DISPATCHED | src/app/performance/**, src/app/contact/**, src/app/api/contact/**, src/components/performance/**, src/components/contact/**, src/lib/{validation,email,rate-limit}.ts | wave2-d |
-| T3a | PENDING | src/app/sitemap.ts, src/app/robots.ts, src/app/opengraph-image.tsx, README.md, .env.example, next.config.ts | — |
-| T3b | PENDING | e2e/**, playwright.config.ts, .github/**, lighthouserc.json | — |
+| T0 | VERIFIED | (repo root scaffold) | 2f75391 |
+| T1 | VERIFIED | src/lib/data/**, src/lib/types.ts, src/lib/site.ts | e72eda0 |
+| T2a | VERIFIED | src/app/layout.tsx, src/app/globals.css, src/lib/motion.ts, src/components/layout/**, src/components/motion/**, src/components/providers/** | f2be8a5 |
+| T2b | VERIFIED | src/app/page.tsx, src/components/sections/**, src/components/profile-avatar.tsx | f2be8a5 |
+| T2c | VERIFIED | src/app/projects/**, src/components/projects/** | f2be8a5 |
+| T2d | VERIFIED | src/app/performance/**, src/app/contact/**, src/app/api/contact/**, src/components/performance/**, src/components/contact/**, src/lib/{validation,email,rate-limit}.ts | f2be8a5 |
+| FIX1 | VERIFIED | globals.css, section-header.tsx, projects/contact/performance pages, rate-limit.ts | 77e0906 |
+| T3a | VERIFIED (by foreman inspection — agent idled without filing a report; its diff was graded directly) | sitemap.ts, robots.ts, opengraph-image.tsx, README.md, .env.example, next.config.ts, site.ts | 77e0906 |
+| T3b | VERIFIED | e2e/**, playwright.config.ts, .github/** | 87ea305 |
+| VERIFY1 | FAILED — killed by an external API session limit mid-run, findings lost | (read-only) | — |
+| VERIFY2 | ACCEPTED | (read-only) | verdict PASS_WITH_NOTES at 1bfc9df |
+| FIX2 | DISPATCHED | analytics.tsx, layout.tsx, performance.ts (1 string), 5 touch-target files, .env.example, README.md | — |
+
+Note: `lighthouserc.json` was deliberately NOT created. The site has never been audited and a
+Lighthouse CI gate asserting scores we have not measured would be a fabricated check. Recorded as a
+deliberate omission, not an oversight.
 
 Note: `src/lib/seo.ts` moved OFF T3a — T2a emits Person JSON-LD inline in the root layout, so
 T3a never needs to touch `layout.tsx`. Keeps wave 3 write sets disjoint.
@@ -99,6 +107,48 @@ the same thing as `EPERM ... .next\trace`). Foreman identified the processes by 
 runtime, terminated them, and re-ran a clean build. **Every wave-3 ticket now carries an explicit
 "do not start a dev server" instruction.** Logged because a stray process silently invalidating a
 verification run is exactly the failure mode the reconciliation step exists to catch.
+
+### Blind verification (VERIFY2) — verdict PASS_WITH_NOTES, and what it caught
+
+Run read-only against the user's original brief verbatim (`.foreman/original-brief.md`), never
+against the foreman's summary of it. Seat: `Explore` @ sonnet (downshifted from opus after an
+external session limit killed the first run; the degradation rule was re-applied per-task rather
+than blanket-downshifting, and the frontier-judgment questions were handled by the foreman instead).
+Tree confirmed clean and HEAD unchanged afterwards — verification not voided.
+
+**Its single most valuable finding, which nothing else would ever have caught:**
+`src/app/projects/page.tsx:11` shipped a meta description claiming "two Lighthouse-100 web
+platforms". Only ONE project (Karuna Growth Suite) has any documented Lighthouse score; CTApps
+Digital has none. A fabricated credential, in a crawlable SEO tag, on a real person's job-seeking
+portfolio — the exact failure mode `content-brief.md` opens by forbidding. **No gate in this build
+could have caught it**: it compiles, it lints, it typechecks, it passes 29 E2E tests. It is a
+factual-content bug, not a code bug. Fixed by the foreman; the line now carries a comment forbidding
+any number the data layer cannot back.
+
+**Also correctly caught:**
+- Touch targets were 44px site-wide; the brief explicitly requires 48×48px. Another defect in the
+  foreman's own design spec (design.md §5 said 44px, which is WCAG 2.5.5 AAA — but the brief asked
+  for more, and the brief wins). → FIX2.
+- `.foreman/scratch/contrast.mjs` had drifted: it hardcoded PRE-fix token values, "failed" on
+  problems already solved, and never tested `--input` — the one token the WCAG 1.4.11 rule it
+  claimed to check actually governs. A checker that can drift from what it checks is decoration,
+  not evidence. → replaced by `scripts/check-contrast.mjs`, which parses `globals.css` at run time,
+  throws if a token is missing or renamed, exits non-zero on failure, and is now a CI gate.
+  24/24 pass against live tokens.
+- `public/images/profile.jpg` was 108.7 KB against the brief's explicit "<100KB". → re-encoded to
+  53 KB at 800×800 (still 4.5× the 176px render size). Space-named duplicate removed.
+- Analytics absent though the brief lists it as a non-optional Additional Feature. → FIX2.
+- The ledger itself had gone stale and could not be trusted as evidence. → corrected above.
+
+**Where the verifier was WRONG — checked, not taken on faith:**
+It reported "No project-level README.md exists at all." `README.md` is present, 141 lines, and was
+read by the foreman earlier in the run. A blind verifier's output is still a claim to be graded.
+
+**Found by the foreman's own parallel pass, NOT by the verifier:**
+`performance.ts` `defer-non-critical-scripts` claimed scripts were loaded via `next/script`'s
+`afterInteractive` when the site imported `next/script` nowhere and loaded no such scripts. Phrased
+conditionally ("*any* script this site loads"), which is how a vacuous claim survives review. → FIX2
+rewrites it to describe the real, env-gated analytics mount.
 
 ### Trivial change made by the foreman directly (verifier-exempt)
 

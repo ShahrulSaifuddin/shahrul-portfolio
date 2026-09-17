@@ -90,7 +90,7 @@ export function Navigation(): React.ReactElement {
             target="_blank"
             rel="noreferrer noopener"
             aria-label="GitHub profile"
-            className="hidden size-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:inline-flex"
+            className="hidden size-12 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:inline-flex"
           >
             <GitHubIcon className="size-4" />
           </a>

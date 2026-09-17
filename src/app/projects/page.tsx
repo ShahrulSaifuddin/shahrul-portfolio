@@ -7,8 +7,13 @@ import { allProjectTech, projects } from '@/lib/data/projects'
 import { siteConfig } from '@/lib/site'
 
 const title = `Projects — ${siteConfig.name}`
+// Every claim here must be traceable to src/lib/data/projects.ts. An earlier
+// revision said "two Lighthouse-100 web platforms" — only ONE project
+// (Karuna Growth Suite) has a documented Lighthouse score, so that was an
+// invented credential sitting in a crawlable meta description. Do not add a
+// number to this string that the data layer cannot back.
 const description =
-  'Four production systems shipped end to end — EV-charging hardware, event-ticketing payments, and two Lighthouse-100 web platforms. Filter by technology or search by name, role and stack.'
+  'Four production systems shipped end to end — EV-charging hardware and OCPP integration, event-ticketing payments, and corporate web platforms. Filter by technology or search by name, role and stack.'
 
 export const metadata: Metadata = {
   title,

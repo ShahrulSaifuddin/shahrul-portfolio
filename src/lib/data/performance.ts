@@ -242,7 +242,7 @@ export const performanceItems = [
     detail:
       'Analytics, chat widgets and other third-party scripts block nothing the visitor is looking at, so loading them eagerly only competes with the scripts the page actually needs to render. Deferring them keeps the critical path clear.',
     appliedHere:
-      "Any non-critical script this site loads (such as analytics) is loaded with next/script's lazyOnload/afterInteractive strategy rather than blocking initial render.",
+      "The only third-party script this site can load is the optional analytics mount (`src/components/analytics.tsx`), which is env-gated and off by default. When enabled, it loads via next/script's afterInteractive strategy so it never blocks initial render; with analytics disabled, the site loads no third-party JavaScript at all.",
     evidence: null,
     demo: null,
     icon: 'Clock',
