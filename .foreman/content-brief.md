@@ -181,11 +181,17 @@ percentages are meaningless and read as padding. Group and list them; that is th
 
 ## Assets
 
-- **Profile photo:** `public/images/profile.jpg` — **this file does not exist yet.** The user has it
-  but it was never written to disk. Every avatar usage must degrade gracefully to an initials
-  ("SS") monogram on a `--brand-muted` field when the image is absent. Never ship a broken
-  `<img>` or a layout that collapses without it.
-- **Resume PDF:** `public/Shahrul_Saifuddin_Resume_2026.pdf` — **also not yet copied in.** The
-  "Download Resume" button must point at this path; the foreman copies the real file in.
+- **Profile photo:** `public/images/profile.jpg` — **EXISTS (foreman corrected 2026-09-17).**
+  A square 111 KB JPEG headshot, ~1242×1242, plain light-grey background, subject in a dark suit.
+  The owner had already dropped it into `public/images/` under the filename
+  `profile picture.jpeg`; the space in that name is why nothing resolved it. The foreman copied it
+  to `profile.jpg`. The original space-named duplicate is still present — the owner can delete it.
+  The initials ("SS") monogram fallback **stays in the code regardless** — it is the correct
+  behaviour if the file is ever missing, and it costs nothing when the image loads.
+  Because the background is near-white, the avatar needs a visible ring/border in LIGHT theme or it
+  will bleed into the page background.
+- **Resume PDF:** `public/Shahrul_Saifuddin_Resume_2026.pdf` — **EXISTS**, copied in by the foreman.
+  The "Download Resume" button points at this path.
+- **OG image:** the profile photo is a usable source for the social card.
 - **No project screenshots exist.** Project cards must NOT reference image files. Use a typographic
   / metric-led card design instead of an image-led one. Do not generate placeholder screenshots.

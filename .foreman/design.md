@@ -133,6 +133,29 @@ classes (`bg-background`, `text-muted-foreground`, `border-border`, `text-brand`
 --color-success: var(--success);
 ```
 
+### FOREMAN AMENDMENT 2 — measured contrast corrections (2026-09-17)
+
+The foreman converted every token pair from OKLCH → sRGB and computed real WCAG 2.1 ratios
+(script: `.foreman/scratch/contrast.mjs`). **Two of the values originally specified above failed.**
+They are corrected here; these corrected values are authoritative.
+
+| Token | Was | **Now** | Measured | Why |
+|---|---|---|---|---|
+| light `--primary` | `oklch(0.58 0.12 168)` | **`oklch(0.53 0.12 168)`** | 4.76:1 | `--primary-foreground` on the CTA fill measured **3.92:1 — FAIL**. The main "Get in touch" button had illegible label text in light mode. |
+| light `--brand` | `oklch(0.52 0.12 168)` | **`oklch(0.50 0.12 168)`** | 4.87:1 on `--brand-muted` | Was exactly 4.50:1 on the badge tint — dead on the line, no rounding margin. |
+| light `--ring` | `oklch(0.58 0.12 168)` | **`oklch(0.53 0.12 168)`** | — | Track `--primary`. |
+| light `--input` | `oklch(0.918 0.004 285)` | **`oklch(0.65 0.004 285)`** | 3.21:1 | Form-control borders fall under WCAG **1.4.11 non-text contrast (3:1)**. At the old value they measured **1.26:1 — FAIL**. |
+| dark `--input` | `oklch(0.305 0.006 285)` | **`oklch(0.52 0.006 285)`** | 3.49:1 | Same rule, dark theme. Was 1.39:1. |
+| dark `--ring` | `oklch(0.76 0.13 168)` | unchanged | 9.50:1 | Already passing. |
+
+**`--border` stays as specified and is deliberately NOT raised to 3:1.** WCAG 1.4.11 governs UI
+component boundaries and meaningful graphics — not decorative hairline dividers between cards.
+Forcing every card edge to 3:1 would make the site look like a wireframe. **`--input` is therefore
+now a genuinely different value from `--border`** — do not "tidy" them back together.
+
+Everything else measured clean, with generous margins:
+body text 17.67:1 light / 16.90:1 dark; secondary text 5.80:1 / 8.20:1; brand ink 5.00:1 / 10.18:1.
+
 **Brand discipline:** brand color is a *spice*. Per viewport, at most ~3 brand-colored elements —
 typically the primary CTA, the active nav indicator, and one data highlight. Never brand-color body
 text. Never brand-fill a large surface. Hover states stay neutral (`bg-accent`).

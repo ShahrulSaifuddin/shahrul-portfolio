@@ -39,18 +39,45 @@ PowerShell for shell work and Read/Write/Edit tools for file work.
 
 | id | state | owned paths | job id |
 |---|---|---|---|
-| T0 | PENDING | (repo root scaffold) | — |
-| T1 | PENDING | src/lib/data/**, src/lib/types.ts, src/lib/site.ts | — |
-| T2a | PENDING | src/app/layout.tsx, src/app/globals.css, src/components/layout/**, src/components/providers/** | — |
-| T2b | PENDING | src/app/page.tsx, src/components/sections/** | — |
-| T2c | PENDING | src/app/projects/**, src/components/projects/** | — |
-| T2d | PENDING | src/app/performance/**, src/app/contact/**, src/app/api/contact/**, src/components/performance/**, src/components/contact/**, src/lib/email.ts | — |
-| T3a | PENDING | src/app/sitemap.ts, src/app/robots.ts, src/app/opengraph-image.tsx, src/lib/seo.ts, README.md, .env.example, next.config.ts | — |
+| T0 | VERIFIED | (repo root scaffold) | sync |
+| T1 | VERIFIED | src/lib/data/**, src/lib/types.ts, src/lib/site.ts | sync |
+| T2a | DISPATCHED | src/app/layout.tsx, src/app/globals.css, src/lib/motion.ts, src/components/layout/**, src/components/motion/**, src/components/providers/** | wave2-a |
+| T2b | DISPATCHED | src/app/page.tsx, src/components/sections/**, src/components/profile-avatar.tsx | wave2-b |
+| T2c | DISPATCHED | src/app/projects/**, src/components/projects/** | wave2-c |
+| T2d | DISPATCHED | src/app/performance/**, src/app/contact/**, src/app/api/contact/**, src/components/performance/**, src/components/contact/**, src/lib/{validation,email,rate-limit}.ts | wave2-d |
+| T3a | PENDING | src/app/sitemap.ts, src/app/robots.ts, src/app/opengraph-image.tsx, README.md, .env.example, next.config.ts | — |
 | T3b | PENDING | e2e/**, playwright.config.ts, .github/**, lighthouserc.json | — |
+
+Note: `src/lib/seo.ts` moved OFF T3a — T2a emits Person JSON-LD inline in the root layout, so
+T3a never needs to touch `layout.tsx`. Keeps wave 3 write sets disjoint.
 
 ## Attempts
 
-(append-only; task | attempt | seat | ticket rev | outcome | checks | evidence | time)
+| task | # | seat | ticket rev | outcome | checks run | evidence | when |
+|---|---|---|---|---|---|---|---|
+| T0 | 1 | sonnet | r1 | DONE | foreman re-ran `npm run build` (exit 0) + `tsc --noEmit` (exit 0) | commit 2f75391; build log bz7t58qif | 2026-09-17 |
+| T1 | 1 | sonnet | r1 | DONE | foreman verified 19 perf items / 5 demos / 4 projects by regex; read `appliedHere` for the 5 highest-risk entries — all honest | commit e72eda0 | 2026-09-17 |
+| T2a | 1 | sonnet | r1 | DISPATCHED | — | baseline e72eda0 | 2026-09-17 |
+| T2b | 1 | sonnet | r1 | DISPATCHED | — | baseline e72eda0 | 2026-09-17 |
+| T2c | 1 | sonnet | r1 | DISPATCHED | — | baseline e72eda0 | 2026-09-17 |
+| T2d | 1 | sonnet | r1 | DISPATCHED | — | baseline e72eda0 | 2026-09-17 |
+
+### T0 verification note (deviation from the default protocol, recorded deliberately)
+
+T0's acceptance criteria are entirely deterministic (build / tsc / lint exit codes + file existence).
+The foreman re-ran all of them personally rather than dispatching a blind verifier, because a
+reproduced deterministic result outranks a model verdict for exactly this class of task
+(verification.md: "A reproduced deterministic failure is authoritative"). A blind verifier runs
+against the cumulative tree at the end of wave 2 and again at final acceptance, which covers the
+scaffold's output as consumed in anger. Recorded here so the reduced assurance is visible, not
+silently assumed.
+
+### Known assurance limitations for this run
+
+- **No cross-family verification.** Codex is not installed, so every verifier shares the builders'
+  model family and therefore some of their blind spots. Stated rather than papered over.
+- **Wave 2 baseline is e72eda0** for all four parallel workers. Any reconciliation is a diff
+  against that commit.
 
 ## Decisions
 
