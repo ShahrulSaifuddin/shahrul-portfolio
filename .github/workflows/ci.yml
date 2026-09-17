@@ -1,0 +1,67 @@
+# name: CI
+
+# # Runs the real gates on every push and pull request: typecheck, lint,
+# # production build, then the Playwright E2E suite against that build.
+# #
+# # IMPORTANT: no RESEND_API_KEY secret is configured here, by design. The
+# # contact-form and /api/contact E2E specs assert the graceful 503 "email
+# # delivery not configured" path (see e2e/contact-form.spec.ts and
+# # e2e/contact-api.spec.ts) rather than a real send, which is the only
+# # behaviour reachable without a live Resend key. Do not add that secret
+# # just to make a "success" path pass — it would defeat the point of this
+# # test and this workflow intentionally has no deploy step or secrets.
+# on:
+#   push:
+#   pull_request:
+
+# jobs:
+#   test:
+#     name: Typecheck, lint, build & E2E
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       - name: Set up Node.js 20
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 20
+#           cache: npm
+
+#       - name: Install dependencies
+#         run: npm ci
+
+#       - name: Typecheck
+#         run: npm run typecheck
+
+#       - name: Lint
+#         run: npm run lint
+
+#       # Reads the design tokens live out of src/app/globals.css and computes
+#       # real WCAG ratios (4.5:1 text, 3:1 non-text). Exits non-zero on any
+#       # failure, so a token edit that breaks contrast fails the build instead
+#       # of shipping. An earlier version of this checker hardcoded the token
+#       # values, drifted out of sync with the CSS, and "passed" while proving
+#       # nothing -- hence parsing the stylesheet at run time.
+#       - name: Contrast gate (WCAG 2.1 AA)
+#         run: node scripts/check-contrast.mjs
+
+#       - name: Build
+#         run: npm run build
+
+#       - name: Install Playwright browsers
+#         run: npx playwright install --with-deps chromium
+
+#       - name: Run E2E tests
+#         run: npm run test:e2e
+#         env:
+#           CI: true
+
+#       - name: Upload Playwright report
+#         if: failure()
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: playwright-report
+#           path: playwright-report/
+#           retention-days: 14

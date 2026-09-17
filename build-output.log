@@ -1,0 +1,51 @@
+﻿
+> shahrul-portfolio@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.25
+
+   Creating an optimized production build ...
+npm : 
+At line:1 char:355
++ ... s\GitHub\shahrul-portfolio; npm run build *> build-output.log; Get-Co ...
++                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+<--- Last few GCs --->
+
+[9144:0000029AE8880080]     2767 ms: Scavenge 299.9 (335.0) -> 299.9 (335.0) MB, 24.99 / 0.00 ms  (average mu = 0.981, 
+current mu = 0.965) allocation failure; 
+[9144:0000029AE8880080]     3843 ms: Scavenge 491.9 (527.0) -> 491.9 (527.0) MB, 49.52 / 0.00 ms  (average mu = 0.981, 
+current mu = 0.965) allocation failure; 
+[9144:0000029AE8880080]     6292 ms: Scavenge 875.9 (911.0) -> 875.9 (911.0) MB, 99.57 / 0.00 ms  (average mu = 0.981, 
+current mu = 0.965) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: invalid table size Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF7C5BFBC9B node::SetCppgcReference+19867
+ 2: 00007FF7C5B6AD78 DSA_meth_get_flags+92952
+ 3: 00007FF7C65E4BB1 v8::Isolate::ReportExternalAllocationLimitReached+65
+ 4: 00007FF7C65CE308 v8::Function::Experimental_IsNopFunction+1336
+ 5: 00007FF7C642FCE0 v8::Platform::SystemClockTimeMillis+659328
+ 6: 00007FF7C6200BF9 v8::base::Thread::StartSynchronously+540233
+ 7: 00007FF7C61F36FF v8::base::Thread::StartSynchronously+485711
+ 8: 00007FF7C61F0E11 v8::base::Thread::StartSynchronously+475233
+ 9: 00007FF7C62D9902 v8::base::Thread::StartSynchronously+1428306
+10: 00007FF7C62D3732 v8::base::Thread::StartSynchronously+1403266
+11: 00007FF7C62716AE v8::base::Thread::StartSynchronously+1001726
+12: 00007FF7C61FB423 v8::base::Thread::StartSynchronously+517747
+13: 00007FF7C6272EE1 v8::base::Thread::StartSynchronously+1007921
+14: 00007FF7C6272624 v8::base::Thread::StartSynchronously+1005684
+15: 00007FF7C62727E2 v8::base::Thread::StartSynchronously+1006130
+16: 00007FF7C6108679 v8::CodeEvent::GetFunctionName+79321
+17: 00007FF7C668FADE v8::PropertyDescriptor::writable+650862
+18: 00007FF7C66C9B5C v8::PropertyDescriptor::writable+888556
+19: 00007FF7C66AB4CE v8::PropertyDescriptor::writable+763998
+20: 00007FF7C6601080 v8::PropertyDescriptor::writable+66576
+21: 00007FF746868F84 
+Next.js build worker exited with code: 134 and signal: null
