@@ -19,6 +19,7 @@ export default function ContactPage() {
   return (
     <Container as="div" className="py-20 sm:py-28 lg:py-32">
       <SectionHeader
+        as="h1"
         id="contact"
         eyebrow="Get in touch"
         title="Contact"

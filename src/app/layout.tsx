@@ -92,7 +92,18 @@ export default function RootLayout({
             </a>
             <ScrollProgress />
             <Navigation />
-            <main id="main">{children}</main>
+            {/*
+              `tabIndex={-1}` is what makes the skip link actually work. A plain
+              `<main id="main">` is not a focusable element, so activating
+              `href="#main"` only moves the scroll position — `document.activeElement`
+              stays on the link and the next Tab drops the user right back into the
+              header, which is precisely what the skip link exists to avoid.
+              `-1` makes it programmatically focusable without adding a tab stop.
+              Caught by an E2E keyboard test; it is invisible to code review.
+            */}
+            <main id="main" tabIndex={-1} className="focus:outline-none">
+              {children}
+            </main>
             <Footer />
             <BackToTop />
             <Toaster />

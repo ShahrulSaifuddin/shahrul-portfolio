@@ -18,6 +18,7 @@ export default function PerformancePage() {
   return (
     <Container as="div" className="py-20 sm:py-28 lg:py-32">
       <SectionHeader
+        as="h1"
         id="performance"
         eyebrow="Engineering checklist"
         title="Performance"
