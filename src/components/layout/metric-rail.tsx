@@ -29,16 +29,41 @@ function MetricValue({
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const reduceMotion = useReducedMotion()
   const { prefix, int, suffix } = splitValue(value)
-  const [display, setDisplay] = React.useState(int !== null && countUp && !reduceMotion ? 0 : int)
+
+  // The initial state is the TRUE value, never 0.
+  //
+  // This is a factual-integrity requirement, not a style preference. These
+  // numbers are claims about a real person ("5 years shipping production
+  // systems"). If the count-up starts from 0 as the default state, then the
+  // server-rendered HTML, the no-JavaScript render, a missed IntersectionObserver
+  // callback, or a hydration hiccup all leave a visitor reading "0 years
+  // shipping production systems" — a false statement, presented confidently.
+  // That was a real, observed bug: after a reload every metric sat at 0
+  // indefinitely.
+  //
+  // So: render the truth, and treat counting up as a pure enhancement that can
+  // only ever fail *back* to the truth. Worst case is "no animation", never
+  // "wrong number".
+  const [display, setDisplay] = React.useState<number | null>(int)
 
   React.useEffect(() => {
     if (int === null || !countUp || reduceMotion || !inView) return
+
+    // Only now, with the animation definitely about to run, drop to 0.
+    setDisplay(0)
     const controls = animate(0, int, {
       duration: DUR.slow,
       ease: [0.16, 1, 0.3, 1],
       onUpdate: (latest) => setDisplay(Math.round(latest)),
+      // Pin the exact final value rather than trusting the last frame's rounding.
+      onComplete: () => setDisplay(int),
     })
-    return () => controls.stop()
+    return () => {
+      controls.stop()
+      // Interrupted mid-count (unmount, re-run, navigation) must restore the
+      // real number, never leave a partial one on screen.
+      setDisplay(int)
+    }
   }, [int, countUp, reduceMotion, inView])
 
   if (int === null) {

@@ -8,9 +8,20 @@ import { ContactForm } from '@/components/contact/contact-form'
 import { profile } from '@/lib/data/profile'
 import { siteConfig } from '@/lib/site'
 
+const description = `Get in touch with ${profile.displayName}, a ${profile.title.toLowerCase()} based in ${profile.location}.`
+
 export const metadata: Metadata = {
-  title: `Contact — ${siteConfig.name}`,
-  description: `Get in touch with ${profile.displayName}, a ${profile.title.toLowerCase()} based in ${profile.location}.`,
+  // Bare title: the root layout's `title.template` appends the site name.
+  // Repeating it here produced "Contact — Shahrul Saifuddin — Shahrul Saifuddin".
+  // The Open Graph title stays fully qualified — no template applies to it.
+  title: 'Contact',
+  description,
+  openGraph: {
+    title: `Contact — ${siteConfig.name}`,
+    description,
+    url: `${siteConfig.url}/contact`,
+    type: 'website',
+  },
 }
 
 export default function ContactPage() {

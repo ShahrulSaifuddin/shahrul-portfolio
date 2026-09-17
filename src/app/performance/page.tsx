@@ -6,10 +6,21 @@ import { PerformanceChecklist } from '@/components/performance/checklist'
 import { performanceItems } from '@/lib/data/performance'
 import { siteConfig } from '@/lib/site'
 
+const description =
+  'A 19-item engineering checklist covering caching, assets, rendering, data, delivery and build optimizations, with five live interactive demos.'
+
 export const metadata: Metadata = {
-  title: `Performance checklist — ${siteConfig.name}`,
-  description:
-    'A 19-item engineering checklist covering caching, assets, rendering, data, delivery and build optimizations, with five live interactive demos.',
+  // Bare title: the root layout's `title.template` appends the site name.
+  // Repeating it here produced "… — Shahrul Saifuddin — Shahrul Saifuddin".
+  // The Open Graph title stays fully qualified — no template applies to it.
+  title: 'Performance checklist',
+  description,
+  openGraph: {
+    title: `Performance checklist — ${siteConfig.name}`,
+    description,
+    url: `${siteConfig.url}/performance`,
+    type: 'website',
+  },
 }
 
 const DEMO_COUNT = performanceItems.filter((item) => item.demo !== null).length

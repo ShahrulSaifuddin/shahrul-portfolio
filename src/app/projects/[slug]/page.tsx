@@ -22,17 +22,22 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   const project = getProjectBySlug(slug as ProjectSlug)
 
   if (!project) {
-    return { title: `Project not found — ${siteConfig.name}` }
+    return { title: 'Project not found' }
   }
 
-  const title = `${project.name} — ${siteConfig.name}`
+  // Bare title: the root layout's `title.template` appends the site name, so
+  // repeating it here rendered "FastEV — Shahrul Saifuddin — Shahrul Saifuddin".
+  // `socialTitle` stays fully qualified — an Open Graph title appears alone in
+  // a shared card and no template is applied to it.
+  const title = project.name
+  const socialTitle = `${project.name} — ${siteConfig.name}`
   const description = `${project.subtitle}. ${project.role}.`
 
   return {
     title,
     description,
     openGraph: {
-      title,
+      title: socialTitle,
       description,
       url: `${siteConfig.url}/projects/${project.slug}`,
       type: 'article',

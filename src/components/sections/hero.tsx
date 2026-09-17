@@ -62,7 +62,19 @@ export function Hero() {
               </p>
 
               <div className="mt-10">
-                <MetricRail metrics={heroMetrics} countUp />
+                {/*
+                  Deliberately NOT `countUp`. These are factual claims about a
+                  person's career, and counting up from 0 means that for the
+                  first ~quarter of the animation the hero reads "0 Products
+                  live on App Store & Google Play" — briefly false, and the
+                  four numerals visibly desync because each cell animates on
+                  its own timer. For single-digit values (5, 2, 4) the motion
+                  is imperceptible anyway, so it bought nothing and cost
+                  accuracy. The numbers fade in with the section instead.
+                  `MetricRail` keeps the `countUp` capability for any future
+                  use where a large number genuinely benefits from it.
+                */}
+                <MetricRail metrics={heroMetrics} />
               </div>
 
               <div className="mt-10 flex flex-wrap gap-3">
