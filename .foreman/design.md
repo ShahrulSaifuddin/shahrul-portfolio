@@ -1,5 +1,34 @@
 # Design Spec — Shahrul Saifuddin Portfolio
 
+## 0. Scaffold facts (verified by the foreman — do not re-derive, do not "fix")
+
+- **Next.js 15.5.25, React 19.1.0, Tailwind v4.3.3, TypeScript 5.9.3, framer-motion 13.4.0.**
+- **Tailwind v4 is CSS-first. There is NO `tailwind.config.ts` and you must not create one.**
+  All tokens live in `src/app/globals.css` (`:root`, `.dark`, and the `@theme inline` block).
+- `src/lib/utils.ts` is `export { cn } from "cn"`. The `cn` package (from the official
+  `shadcn-ui/cn` repo) replaces `clsx` + `tailwind-merge`. **Import `cn` from `@/lib/utils`.**
+  Do NOT `import { clsx }` or `import { twMerge }` — they are not installed.
+- shadcn primitives already installed in `src/components/ui/`, style `radix-nova`, built on the
+  consolidated `radix-ui` package: button, card, badge, input, textarea, label, sheet, dialog,
+  tabs, skeleton, separator, tooltip, accordion, progress, sonner.
+  **These are READ-ONLY. Do NOT run `shadcn add` — it mutates `components.json` + `package.json`
+  and would collide with other workers.** Need a primitive that is missing? Build it by hand
+  inside your own write set.
+- **`package.json` is FROZEN.** Every dependency and script the project needs is already there.
+  Do not install, uninstall, or add scripts. If you believe something is missing, report
+  `NEEDS_CONTEXT` instead of installing it.
+- This machine's global `~/.npmrc` sets `package-lock=false`. Irrelevant unless you install
+  something — which you must not.
+- `globals.css` expects the font variables **`--font-sans`** and **`--font-geist-mono`**. T2a wires
+  these with `next/font/google` (Geist + Geist_Mono) in `src/app/layout.tsx`.
+- `<TooltipProvider>` is not yet mounted. **T2a** mounts it in the root layout.
+- Playwright is installed but **browser binaries are not downloaded** — T3b must run
+  `npx playwright install --with-deps chromium` before running tests.
+- The `lint` script is `next lint`, which prints a deprecation notice on Next 15 but exits 0.
+  Leave it alone.
+
+---
+
 **Authored by the foreman. This is not a suggestion — it is the contract.** Four workers build
 different surfaces of one site in parallel. If you deviate, the site looks like four sites.
 Do not invent colors, fonts, spacing values, easing curves, or shadow recipes. Use what is here.
@@ -23,51 +52,90 @@ on every card, animated blobs, parallax, typewriter effects, confetti, emoji as 
 
 ## 2. Tokens
 
-All tokens live in `src/app/globals.css` as CSS custom properties under Tailwind v4's
-`@theme inline`. Owned by **T2a**. Everyone else consumes them via Tailwind utility classes
-(`bg-background`, `text-muted-foreground`, `border-border`, `text-accent`, …).
+All tokens live in `src/app/globals.css` as CSS custom properties, exposed to Tailwind v4 via the
+existing `@theme inline` block. Owned by **T2a**. Everyone else consumes them via Tailwind utility
+classes (`bg-background`, `text-muted-foreground`, `border-border`, `text-brand`, …).
 
-### Color — light
+> **FOREMAN AMENDMENT (post-scaffold).** shadcn/ui already defines `--accent` and it means
+> *"neutral hover surface"* — its ghost/outline buttons, dropdown items, and tab triggers all use
+> `bg-accent` on hover. If we overloaded `--accent` with the teal brand color, every hover state in
+> the site would flood teal. So:
+>
+> - `--accent` / `--accent-foreground` **keep shadcn's neutral semantics — do not repurpose them.**
+> - `--primary` / `--primary-foreground` become the **brand teal** (shadcn's default `<Button>` is
+>   the primary CTA, so this is exactly right).
+> - New `--brand` / `--brand-foreground` / `--brand-muted` tokens carry brand color anywhere that
+>   is not a button: rails, active indicators, metric highlights, badges.
+> - `--ring` becomes brand teal so focus rings are on-brand.
+
+### Color — light (`:root`)
 
 ```
 --background:            oklch(0.995 0 0)        /* near-white, not pure */
 --foreground:            oklch(0.205 0.005 285)  /* near-black ink */
---muted:                 oklch(0.968 0.002 285)
---muted-foreground:      oklch(0.505 0.008 285)  /* passes 4.5:1 on background */
 --card:                  oklch(1 0 0)
 --card-foreground:       oklch(0.205 0.005 285)
+--popover:               oklch(1 0 0)
+--popover-foreground:    oklch(0.205 0.005 285)
+--muted:                 oklch(0.968 0.002 285)
+--muted-foreground:      oklch(0.505 0.008 285)  /* passes 4.5:1 on --background */
+--accent:                oklch(0.968 0.002 285)  /* NEUTRAL hover surface — shadcn semantics */
+--accent-foreground:     oklch(0.205 0.005 285)
+--secondary:             oklch(0.968 0.002 285)
+--secondary-foreground:  oklch(0.205 0.005 285)
 --border:                oklch(0.918 0.004 285)
 --input:                 oklch(0.918 0.004 285)
---ring:                  oklch(0.62 0.13 168)
---accent:                oklch(0.62 0.13 168)    /* teal-emerald — "charged" */
---accent-foreground:     oklch(0.99 0.01 168)
---accent-muted:          oklch(0.94 0.035 168)   /* tints, badges, rails */
 --destructive:           oklch(0.58 0.21 27)
---success:               oklch(0.62 0.13 168)
+
+--primary:               oklch(0.58 0.12 168)    /* BRAND teal — CTA fill; 4.5:1 vs white text */
+--primary-foreground:    oklch(0.99 0.01 168)
+--brand:                 oklch(0.52 0.12 168)    /* brand INK on light bg — 4.5:1 on --background */
+--brand-foreground:      oklch(0.99 0.01 168)
+--brand-muted:           oklch(0.955 0.03 168)   /* tints, badge fills, rails */
+--ring:                  oklch(0.58 0.12 168)
+--success:               oklch(0.52 0.12 168)
 ```
 
-### Color — dark
+### Color — dark (`.dark`)
 
 ```
 --background:            oklch(0.165 0.004 285)
 --foreground:            oklch(0.955 0.002 285)
---muted:                 oklch(0.225 0.005 285)
---muted-foreground:      oklch(0.715 0.008 285)  /* passes 4.5:1 on dark background */
 --card:                  oklch(0.205 0.005 285)
 --card-foreground:       oklch(0.955 0.002 285)
---border:                oklch(0.285 0.006 285)
---input:                 oklch(0.285 0.006 285)
---ring:                  oklch(0.72 0.14 168)
---accent:                oklch(0.76 0.14 168)    /* lifted for dark-bg contrast */
---accent-foreground:     oklch(0.17 0.03 168)
---accent-muted:          oklch(0.28 0.05 168)
+--popover:               oklch(0.205 0.005 285)
+--popover-foreground:    oklch(0.955 0.002 285)
+--muted:                 oklch(0.245 0.005 285)
+--muted-foreground:      oklch(0.735 0.008 285)  /* passes 4.5:1 on dark --background */
+--accent:                oklch(0.265 0.005 285)  /* NEUTRAL hover surface — shadcn semantics */
+--accent-foreground:     oklch(0.955 0.002 285)
+--secondary:             oklch(0.265 0.005 285)
+--secondary-foreground:  oklch(0.955 0.002 285)
+--border:                oklch(0.295 0.006 285)
+--input:                 oklch(0.305 0.006 285)
 --destructive:           oklch(0.66 0.19 27)
---success:               oklch(0.76 0.14 168)
+
+--primary:               oklch(0.76 0.13 168)    /* BRAND teal, lifted for dark bg */
+--primary-foreground:    oklch(0.17 0.03 168)    /* dark ink on teal fill */
+--brand:                 oklch(0.78 0.13 168)    /* brand ink on dark bg — 4.5:1+ */
+--brand-foreground:      oklch(0.17 0.03 168)
+--brand-muted:           oklch(0.27 0.045 168)
+--ring:                  oklch(0.76 0.13 168)
+--success:               oklch(0.78 0.13 168)
 ```
 
-**Accent discipline:** accent is a *spice*. Per viewport, at most ~3 accent-colored elements.
-Primary CTA, active nav indicator, and one data highlight. Never accent-color body text.
-Never accent-fill a large surface.
+**T2a must also register the new tokens in the `@theme inline` block** so the utilities exist:
+
+```
+--color-brand: var(--brand);
+--color-brand-foreground: var(--brand-foreground);
+--color-brand-muted: var(--brand-muted);
+--color-success: var(--success);
+```
+
+**Brand discipline:** brand color is a *spice*. Per viewport, at most ~3 brand-colored elements —
+typically the primary CTA, the active nav indicator, and one data highlight. Never brand-color body
+text. Never brand-fill a large surface. Hover states stay neutral (`bg-accent`).
 
 ### Typography
 
