@@ -2,105 +2,103 @@
 
 import { memo } from 'react'
 import Link from 'next/link'
-import { motion, useReducedMotion } from 'framer-motion'
+import { ArrowUpRight } from 'lucide-react'
 
-import { cardHoverSpring } from '@/lib/motion'
 import type { Project } from '@/lib/types'
-import { cn } from '@/lib/utils'
-
-/** Tailwind grid-cols classes keyed by visible metric count (2 or 3 in practice). */
-const METRIC_GRID_COLS: Record<number, string> = {
-  1: 'grid-cols-1',
-  2: 'grid-cols-2',
-  3: 'grid-cols-3',
-}
 
 const MAX_VISIBLE_TECH = 5
-const MAX_VISIBLE_METRICS = 3
 
 /**
+ * One numbered row of the /projects list, styled after the home page's
+ * Services list: huge index, name + details, key metrics, arrow.
+ *
  * Wrapped in `React.memo`: `ProjectFilter` re-renders on every keystroke (its
  * `query` state), but `project` objects come from the module-level `projects`
- * array and keep a stable reference across renders where a given card is
- * still in the filtered list. Without memo, every visible card would
+ * array and keep a stable reference across renders where a given row is
+ * still in the filtered list. Without memo, every visible row would
  * re-render on every keystroke for no reason — this is the real, live
  * instance of the pattern demonstrated on /performance's "Reduce Unnecessary
  * Re-Renders" item, not just a contrived demo.
  */
-function ProjectCardImpl({ project, className }: { project: Project; className?: string }) {
-  const shouldReduceMotion = useReducedMotion()
-
-  const visibleMetrics = project.metrics.slice(0, MAX_VISIBLE_METRICS)
+function ProjectCardImpl({ project, index }: { project: Project; index: number }) {
   const visibleTech = project.tech.slice(0, MAX_VISIBLE_TECH)
   const overflowTechCount = project.tech.length - visibleTech.length
+  const visibleMetrics = project.metrics.slice(0, 2)
 
   return (
-    <motion.div
-      className={cn(
-        'group relative flex h-full flex-col rounded-xl border border-border bg-card p-6 transition-colors duration-200',
-        'hover:border-brand/40 hover:shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-12px_rgba(0,0,0,0.12)]',
-        'dark:hover:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_8px_24px_-12px_rgba(0,0,0,0.5)]',
-        className,
-      )}
-      whileHover={shouldReduceMotion ? undefined : { y: -2 }}
-      transition={cardHoverSpring}
+    <div
+      className="group relative grid grid-cols-[auto_1fr] items-start gap-x-6 gap-y-6 border-b py-10 first:border-t sm:gap-x-10 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-x-12 md:py-12"
+      style={{ borderColor: 'rgba(12, 12, 12, 0.15)' }}
     >
-      <div>
-        <h3 className="text-base font-semibold tracking-[-0.01em] sm:text-lg">
-          {/* Stretched-link overlay: this is the ONLY link in the card, so the
-              card is a single tab stop. `after:inset-0` covers the whole
-              relatively-positioned card; the visible text stays inline here. */}
+      <span
+        className="leading-none font-black transition-colors group-hover:text-[#7621B0]"
+        style={{ fontSize: 'clamp(3rem, 10vw, 140px)' }}
+      >
+        {String(index + 1).padStart(2, '0')}
+      </span>
+
+      <div className="flex min-w-0 flex-col gap-2 md:gap-3">
+        <p className="text-xs font-light tracking-[0.25em] uppercase opacity-60 sm:text-sm">
+          {project.subtitle} · {project.status}
+        </p>
+        <h3 className="font-medium uppercase" style={{ fontSize: 'clamp(1.25rem, 2.6vw, 2.4rem)' }}>
+          {/* Stretched-link overlay: the ONLY link in the row, so the row is a
+              single tab stop; `after:inset-0` makes the whole row clickable. */}
           <Link
             href={`/projects/${project.slug}`}
-            className="rounded-sm after:absolute after:inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="rounded-sm after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-[#0C0C0C] focus-visible:ring-offset-4 focus-visible:outline-none"
           >
             {project.name}
           </Link>
         </h3>
-        <p className="mt-1 text-sm text-muted-foreground">{project.subtitle}</p>
+        <p
+          className="max-w-2xl leading-relaxed font-light opacity-60"
+          style={{ fontSize: 'clamp(0.85rem, 1.4vw, 1.1rem)' }}
+        >
+          {project.role} · {project.period}
+        </p>
+        <ul className="mt-1 flex flex-wrap gap-2">
+          {visibleTech.map((tech) => (
+            <li
+              key={tech}
+              className="rounded-full border border-[#0C0C0C]/20 px-3 py-1 text-xs tracking-wide uppercase"
+            >
+              {tech}
+            </li>
+          ))}
+          {overflowTechCount > 0 && (
+            <li
+              className="rounded-full border border-[#0C0C0C]/20 px-3 py-1 text-xs tracking-wide uppercase opacity-60"
+              aria-label={`plus ${overflowTechCount} more technologies`}
+            >
+              +{overflowTechCount}
+            </li>
+          )}
+        </ul>
+      </div>
 
-        <span className="mt-3 inline-flex w-fit items-center rounded-full border border-border bg-muted px-2.5 py-0.5 text-xs font-mono text-muted-foreground">
-          {project.status}
+      <div className="hidden items-center gap-10 md:flex">
+        <dl className="flex gap-8 text-right">
+          {visibleMetrics.map((metric) => (
+            <div key={metric.label} className="w-24">
+              <dt className="sr-only">{metric.label}</dt>
+              <dd
+                className="leading-none font-black"
+                style={{ fontSize: 'clamp(1.75rem, 3vw, 2.75rem)' }}
+              >
+                {metric.value}
+              </dd>
+              <dd aria-hidden className="mt-1 text-[11px] leading-snug uppercase opacity-60">
+                {metric.label}
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <span className="flex size-14 shrink-0 items-center justify-center rounded-full border-2 border-[#0C0C0C] transition-colors group-hover:bg-[#0C0C0C] group-hover:text-white">
+          <ArrowUpRight aria-hidden="true" className="size-6" />
         </span>
-
-        <p className="mt-3 text-sm text-muted-foreground">{project.role}</p>
       </div>
-
-      <div
-        className={cn(
-          'mt-5 grid gap-3 border-t border-border pt-5',
-          METRIC_GRID_COLS[visibleMetrics.length] ?? 'grid-cols-3',
-        )}
-      >
-        {visibleMetrics.map((metric) => (
-          <div key={metric.label}>
-            <p className="font-mono text-lg font-semibold tracking-tight tabular-nums sm:text-xl">
-              {metric.value}
-            </p>
-            <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{metric.label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-auto flex flex-wrap gap-1.5 pt-5">
-        {visibleTech.map((tech) => (
-          <span
-            key={tech}
-            className="rounded-full border border-border bg-muted px-2.5 py-0.5 text-xs font-mono text-muted-foreground"
-          >
-            {tech}
-          </span>
-        ))}
-        {overflowTechCount > 0 && (
-          <span
-            className="rounded-full border border-border bg-muted px-2.5 py-0.5 text-xs font-mono text-muted-foreground"
-            aria-label={`plus ${overflowTechCount} more technologies`}
-          >
-            +{overflowTechCount}
-          </span>
-        )}
-      </div>
-    </motion.div>
+    </div>
   )
 }
 

@@ -11,11 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
-import {
-  contactSchema,
-  type ContactApiResponse,
-  type ContactFormValues,
-} from '@/lib/validation'
+import { contactSchema, type ContactApiResponse, type ContactFormValues } from '@/lib/validation'
 
 const DEFAULT_VALUES: ContactFormValues = {
   name: '',
@@ -75,18 +71,23 @@ export function ContactForm() {
       setStatus({ kind: 'error', message: errorMessage })
       toast.error(errorMessage)
     } catch {
-      const errorMessage =
-        'Could not reach the server. Check your connection and try again.'
+      const errorMessage = 'Could not reach the server. Check your connection and try again.'
       setStatus({ kind: 'error', message: errorMessage })
       toast.error(errorMessage)
     }
   }
 
   return (
-    <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       <div className="space-y-1.5">
-        <Label htmlFor="contact-name">Name</Label>
+        <Label
+          className="text-xs font-light tracking-[0.3em] text-[#0C0C0C]/70 uppercase"
+          htmlFor="contact-name"
+        >
+          Name
+        </Label>
         <Input
+          className="aria-invalid:border-destructive h-14 rounded-none border-0 border-b-2 border-[#0C0C0C]/50 bg-transparent px-0 text-lg text-[#0C0C0C] shadow-none focus-visible:border-[#0C0C0C] focus-visible:ring-0 md:text-lg dark:bg-transparent dark:aria-invalid:ring-0"
           id="contact-name"
           autoComplete="name"
           aria-invalid={errors.name ? true : undefined}
@@ -94,15 +95,21 @@ export function ContactForm() {
           {...register('name')}
         />
         {errors.name ? (
-          <p id="contact-name-error" className="text-xs text-destructive">
+          <p id="contact-name-error" className="text-destructive text-xs">
             {errors.name.message}
           </p>
         ) : null}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="contact-email">Email</Label>
+        <Label
+          className="text-xs font-light tracking-[0.3em] text-[#0C0C0C]/70 uppercase"
+          htmlFor="contact-email"
+        >
+          Email
+        </Label>
         <Input
+          className="aria-invalid:border-destructive h-14 rounded-none border-0 border-b-2 border-[#0C0C0C]/50 bg-transparent px-0 text-lg text-[#0C0C0C] shadow-none focus-visible:border-[#0C0C0C] focus-visible:ring-0 md:text-lg dark:bg-transparent dark:aria-invalid:ring-0"
           id="contact-email"
           type="email"
           autoComplete="email"
@@ -111,15 +118,21 @@ export function ContactForm() {
           {...register('email')}
         />
         {errors.email ? (
-          <p id="contact-email-error" className="text-xs text-destructive">
+          <p id="contact-email-error" className="text-destructive text-xs">
             {errors.email.message}
           </p>
         ) : null}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="contact-subject">Subject</Label>
+        <Label
+          className="text-xs font-light tracking-[0.3em] text-[#0C0C0C]/70 uppercase"
+          htmlFor="contact-subject"
+        >
+          Subject
+        </Label>
         <Input
+          className="aria-invalid:border-destructive h-14 rounded-none border-0 border-b-2 border-[#0C0C0C]/50 bg-transparent px-0 text-lg text-[#0C0C0C] shadow-none focus-visible:border-[#0C0C0C] focus-visible:ring-0 md:text-lg dark:bg-transparent dark:aria-invalid:ring-0"
           id="contact-subject"
           autoComplete="off"
           aria-invalid={errors.subject ? true : undefined}
@@ -127,15 +140,21 @@ export function ContactForm() {
           {...register('subject')}
         />
         {errors.subject ? (
-          <p id="contact-subject-error" className="text-xs text-destructive">
+          <p id="contact-subject-error" className="text-destructive text-xs">
             {errors.subject.message}
           </p>
         ) : null}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="contact-message">Message</Label>
+        <Label
+          className="text-xs font-light tracking-[0.3em] text-[#0C0C0C]/70 uppercase"
+          htmlFor="contact-message"
+        >
+          Message
+        </Label>
         <Textarea
+          className="aria-invalid:border-destructive min-h-40 rounded-none border-0 border-b-2 border-[#0C0C0C]/50 bg-transparent px-0 py-3 text-lg text-[#0C0C0C] shadow-none focus-visible:border-[#0C0C0C] focus-visible:ring-0 md:text-lg dark:bg-transparent dark:aria-invalid:ring-0"
           id="contact-message"
           rows={6}
           aria-invalid={errors.message ? true : undefined}
@@ -143,7 +162,7 @@ export function ContactForm() {
           {...register('message')}
         />
         {errors.message ? (
-          <p id="contact-message-error" className="text-xs text-destructive">
+          <p id="contact-message-error" className="text-destructive text-xs">
             {errors.message.message}
           </p>
         ) : null}
@@ -151,13 +170,31 @@ export function ContactForm() {
 
       {/* Honeypot: invisible and unreachable by keyboard/AT for humans, but
           present in the DOM and auto-filled by most naive form-filling bots. */}
-      <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="absolute top-auto left-[-9999px] h-px w-px overflow-hidden"
+      >
         <label htmlFor="contact-company">Company</label>
-        <input id="contact-company" type="text" tabIndex={-1} autoComplete="off" {...register('honeypot')} />
+        <input
+          id="contact-company"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          {...register('honeypot')}
+        />
       </div>
 
       <div className="flex items-center gap-4 pt-1">
-        <Button type="submit" disabled={isSubmitting} className="min-w-32">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="h-auto min-w-44 rounded-full px-10 py-3.5 text-sm font-medium tracking-widest text-white uppercase outline-2 -outline-offset-3 outline-white outline-solid"
+          style={{
+            background:
+              'linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%)',
+            boxShadow: '0px 4px 4px rgba(181, 1, 167, 0.25), 4px 4px 12px #7721B1 inset',
+          }}
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
@@ -175,7 +212,7 @@ export function ContactForm() {
         className={cn(
           'min-h-5 text-sm',
           status.kind === 'error' && 'text-destructive',
-          status.kind === 'success' && 'text-brand'
+          status.kind === 'success' && 'text-[#7621B0]'
         )}
       >
         {status.message}

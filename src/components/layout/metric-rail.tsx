@@ -18,13 +18,7 @@ function splitValue(value: string): {
   return { prefix, int: Number(digits), suffix }
 }
 
-function MetricValue({
-  value,
-  countUp,
-}: {
-  value: string
-  countUp: boolean
-}): React.ReactElement {
+function MetricValue({ value, countUp }: { value: string; countUp: boolean }): React.ReactElement {
   const ref = React.useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const reduceMotion = useReducedMotion()
@@ -97,18 +91,21 @@ export function MetricRail({
   countUp?: boolean
 }): React.ReactElement {
   return (
-    <div
-      className={cn(
-        'grid grid-cols-2 divide-x divide-border border-y border-border sm:grid-cols-4',
-        className
-      )}
-    >
+    <div className={cn('grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4', className)}>
       {metrics.map((metric) => (
-        <div key={metric.label} className="flex flex-col gap-1 px-4 py-4 first:pl-0 sm:px-6">
-          <span className="font-mono text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+        <div
+          key={metric.label}
+          className="border-border bg-card flex flex-col gap-2 rounded-[32px] border px-6 py-6 sm:rounded-[40px]"
+        >
+          <span
+            className="hero-heading leading-none font-black"
+            style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)' }}
+          >
             <MetricValue value={metric.value} countUp={countUp} />
           </span>
-          <span className="text-xs text-muted-foreground">{metric.label}</span>
+          <span className="text-muted-foreground text-xs leading-snug tracking-wide uppercase">
+            {metric.label}
+          </span>
         </div>
       ))}
     </div>

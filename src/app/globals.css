@@ -105,37 +105,37 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* The site is dark-only (ThemeProvider forces `dark`); these tokens carry the
+   portfolio palette — #0C0C0C ground, #D7E2EA ink, magenta/violet accent — so
+   every shadcn primitive on every page matches the home page design. */
 .dark {
-  --background: oklch(0.165 0.004 285);
-  --foreground: oklch(0.955 0.002 285);
-  --card: oklch(0.205 0.005 285);
-  --card-foreground: oklch(0.955 0.002 285);
-  --popover: oklch(0.205 0.005 285);
-  --popover-foreground: oklch(0.955 0.002 285);
-  /* BRAND teal, lifted for dark bg. */
-  --primary: oklch(0.76 0.13 168);
-  --primary-foreground: oklch(0.17 0.03 168);
-  --secondary: oklch(0.265 0.005 285);
-  --secondary-foreground: oklch(0.955 0.002 285);
-  --muted: oklch(0.245 0.005 285);
-  --muted-foreground: oklch(0.735 0.008 285); /* passes 4.5:1 on dark --background */
+  --background: #0c0c0c;
+  --foreground: #d7e2ea;
+  --card: #141414;
+  --card-foreground: #d7e2ea;
+  --popover: #141414;
+  --popover-foreground: #d7e2ea;
+  --primary: #b600a8;
+  --primary-foreground: #ffffff; /* 5.6:1 on --primary */
+  --secondary: #1c1c1c;
+  --secondary-foreground: #d7e2ea;
+  --muted: #1a1a1a;
+  --muted-foreground: #9aa4ac; /* 7.6:1 on --background */
   /* NEUTRAL hover surface — shadcn semantics. Do NOT repurpose with brand color. */
-  --accent: oklch(0.265 0.005 285);
-  --accent-foreground: oklch(0.955 0.002 285);
+  --accent: #1f1f1f;
+  --accent-foreground: #d7e2ea;
   --destructive: oklch(0.66 0.19 27);
-  /* Decorative hairline dividers between cards — NOT a form-control border, not
-     covered by WCAG 1.4.11. Deliberately lower contrast than --input; do not
-     "tidy" these back to the same value. */
-  --border: oklch(0.295 0.006 285);
-  /* Form-control (input) border — governed by WCAG 1.4.11 (3:1 non-text
-     contrast). Measured 1.39:1 at the old value; 0.52 measures 3.49:1.
-     Deliberately different from --border; do not merge them. */
-  --input: oklch(0.52 0.006 285);
-  --ring: oklch(0.76 0.13 168);
-  --brand: oklch(0.78 0.13 168);
-  --brand-foreground: oklch(0.17 0.03 168);
-  --brand-muted: oklch(0.27 0.045 168);
-  --success: oklch(0.78 0.13 168);
+  /* Decorative hairline dividers — deliberately lower contrast than --input. */
+  --border: rgb(215 226 234 / 0.15);
+  /* Form-control border — WCAG 1.4.11 needs 3:1 non-text contrast; #6b747b
+     measures ~3.9:1 on --background. Do not merge with --border. */
+  --input: #6b747b;
+  --ring: #d7e2ea;
+  --brand: #e070e6; /* text-safe accent, 6.4:1 on --background */
+  --brand-foreground: #0c0c0c;
+  --brand-muted: #2a0f2c;
+  --success: #e070e6;
+  --radius: 1rem;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -149,6 +149,13 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #bbccd7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 @layer base {

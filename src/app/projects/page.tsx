@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 
-import { Container } from '@/components/layout/container'
-import { SectionHeader } from '@/components/layout/section-header'
+import { LightPanel, PageHero } from '@/components/layout/page-hero'
 import { ProjectFilter } from '@/components/projects/project-filter'
 import { allProjectTech, projects } from '@/lib/data/projects'
 import { siteConfig } from '@/lib/site'
@@ -34,16 +33,28 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <Container as="div" className="py-20 sm:py-28 lg:py-32">
-      <SectionHeader
+    <>
+      <PageHero
         id="projects"
-        eyebrow="Selected work"
         title="Projects"
-        description="Mobile apps, backend APIs, and web platforms shipped end to end — filter by technology or search across role, stack and highlights."
-        as="h1"
+        intro="Mobile apps, backend APIs and web platforms — shipped end to end"
+        aside={
+          <p className="sm:text-right">
+            <span
+              className="hero-heading block leading-none font-black"
+              style={{ fontSize: 'clamp(3rem, 8vw, 8rem)' }}
+            >
+              {String(projects.length).padStart(2, '0')}
+            </span>
+            <span className="text-xs font-light tracking-[0.3em] text-[#D7E2EA]/70 uppercase">
+              Production systems
+            </span>
+          </p>
+        }
       />
-
-      <ProjectFilter projects={projects} allTech={allProjectTech} />
-    </Container>
+      <LightPanel>
+        <ProjectFilter projects={projects} allTech={allProjectTech} />
+      </LightPanel>
+    </>
   )
 }

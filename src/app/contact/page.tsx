@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
-import { Mail, Phone } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 
-import { Container } from '@/components/layout/container'
-import { SectionHeader } from '@/components/layout/section-header'
-import { GitHubIcon } from '@/components/layout/icons'
+import { LightPanel, PageHero } from '@/components/layout/page-hero'
 import { ContactForm } from '@/components/contact/contact-form'
+import { FadeIn } from '@/components/home/fade-in'
 import { profile } from '@/lib/data/profile'
 import { siteConfig } from '@/lib/site'
 
@@ -24,84 +23,107 @@ export const metadata: Metadata = {
   },
 }
 
+const HEADING = 'leading-none font-black tracking-tight uppercase'
+
 export default function ContactPage() {
   const telHref = `tel:${profile.phone.replace(/[^+\d]/g, '')}`
 
+  const channels = [
+    { label: 'Email', value: profile.email, href: `mailto:${profile.email}`, external: false },
+    { label: 'Phone', value: profile.phone, href: telHref, external: false },
+    {
+      label: 'GitHub',
+      value: 'github.com/ShahrulSaifuddin',
+      href: profile.github,
+      external: true,
+    },
+    { label: 'Resume', value: 'Download PDF', href: profile.resumeUrl, external: true },
+  ]
+
   return (
-    <Container as="div" className="py-20 sm:py-28 lg:py-32">
-      <SectionHeader
-        as="h1"
+    <>
+      <PageHero
         id="contact"
-        eyebrow="Get in touch"
         title="Contact"
-        description="Open to full-stack, mobile and backend roles. The form below goes straight to my inbox, or reach out directly using the details on the right."
+        intro="Open to full-stack, mobile and backend roles"
+        aside={
+          <p className="text-xs font-light tracking-[0.3em] text-[#D7E2EA]/70 uppercase sm:text-right sm:text-sm">
+            Based in
+            <span className="mt-1 block text-base font-medium tracking-wider text-[#D7E2EA] sm:text-xl">
+              {profile.location}
+            </span>
+          </p>
+        }
       />
 
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
-        <div className="max-w-3xl">
-          <ContactForm />
+      <LightPanel>
+        <div className="mx-auto grid max-w-6xl gap-20 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <FadeIn
+              as="h2"
+              y={40}
+              className={`mb-10 ${HEADING}`}
+              style={{ fontSize: 'clamp(2.5rem, 6vw, 88px)' }}
+            >
+              Reach me
+            </FadeIn>
+            <ul>
+              {channels.map((channel, i) => (
+                <FadeIn
+                  as="li"
+                  key={channel.label}
+                  delay={i * 0.1}
+                  className="border-b first:border-t"
+                  style={{ borderColor: 'rgba(12, 12, 12, 0.15)' }}
+                >
+                  <a
+                    href={channel.href}
+                    {...(channel.external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
+                    className="group flex items-center gap-6 py-6 focus-visible:ring-2 focus-visible:ring-[#0C0C0C] focus-visible:outline-none sm:gap-8 sm:py-8"
+                  >
+                    <span
+                      className="leading-none font-black transition-colors group-hover:text-[#7621B0]"
+                      style={{ fontSize: 'clamp(2.5rem, 6vw, 80px)' }}
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="flex min-w-0 flex-1 flex-col gap-1">
+                      <span className="text-xs font-light tracking-[0.3em] text-[#0C0C0C]/70 uppercase">
+                        {channel.label}
+                      </span>
+                      <span
+                        className="truncate font-medium"
+                        style={{ fontSize: 'clamp(1rem, 1.8vw, 1.5rem)' }}
+                      >
+                        {channel.value}
+                      </span>
+                    </span>
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="size-6 shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                    />
+                  </a>
+                </FadeIn>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <FadeIn
+              as="h2"
+              y={40}
+              className={`mb-10 ${HEADING}`}
+              style={{ fontSize: 'clamp(2.5rem, 6vw, 88px)' }}
+            >
+              Write me
+            </FadeIn>
+            <p className="mb-10 max-w-md leading-relaxed font-light text-[#0C0C0C]/70">
+              The form goes straight to my inbox — I reply personally by email.
+            </p>
+            <ContactForm />
+          </div>
         </div>
-
-        <aside aria-labelledby="direct-contact-heading" className="space-y-4">
-          <h3
-            id="direct-contact-heading"
-            className="text-base font-semibold tracking-[-0.01em] sm:text-lg"
-          >
-            Direct contact
-          </h3>
-
-          <ul className="space-y-3">
-            <li>
-              <a
-                href={`mailto:${profile.email}`}
-                className="flex items-center gap-3 rounded-lg border border-border p-3 text-sm text-muted-foreground transition-colors hover:border-accent/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                <Mail className="size-4 shrink-0" aria-hidden="true" />
-                <span>
-                  <span className="block text-xs font-mono uppercase tracking-[0.18em] text-muted-foreground">
-                    Email
-                  </span>
-                  <span className="block text-foreground">{profile.email}</span>
-                </span>
-              </a>
-            </li>
-            <li>
-              <a
-                href={telHref}
-                className="flex items-center gap-3 rounded-lg border border-border p-3 text-sm text-muted-foreground transition-colors hover:border-accent/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                <Phone className="size-4 shrink-0" aria-hidden="true" />
-                <span>
-                  <span className="block text-xs font-mono uppercase tracking-[0.18em] text-muted-foreground">
-                    Phone
-                  </span>
-                  <span className="block text-foreground">{profile.phone}</span>
-                </span>
-              </a>
-            </li>
-            <li>
-              <a
-                href={profile.github}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="flex items-center gap-3 rounded-lg border border-border p-3 text-sm text-muted-foreground transition-colors hover:border-accent/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                <GitHubIcon className="size-4 shrink-0" aria-hidden="true" />
-                <span>
-                  <span className="block text-xs font-mono uppercase tracking-[0.18em] text-muted-foreground">
-                    GitHub
-                  </span>
-                  <span className="block text-foreground">github.com/ShahrulSaifuddin</span>
-                </span>
-              </a>
-            </li>
-          </ul>
-
-          <p className="max-w-[36ch] text-xs text-muted-foreground">
-            Based in {profile.location}.
-          </p>
-        </aside>
-      </div>
-    </Container>
+      </LightPanel>
+    </>
   )
 }

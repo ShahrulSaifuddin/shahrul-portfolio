@@ -23,9 +23,9 @@ export function FeaturedProjects() {
         />
 
         <RevealGroup as="div" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {featuredProjects.map((project) => (
+          {featuredProjects.map((project, i) => (
             <RevealItem key={project.slug} as="div">
-              <ProjectCard project={project} />
+              <ProjectCard project={project} index={i} />
             </RevealItem>
           ))}
         </RevealGroup>

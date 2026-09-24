@@ -1,12 +1,10 @@
 import type { Metadata } from 'next'
 
-import { Hero } from '@/components/sections/hero'
-import { About } from '@/components/sections/about'
-import { FeaturedProjects } from '@/components/sections/featured-projects'
-import { Skills } from '@/components/sections/skills'
-import { Experience } from '@/components/sections/experience'
-import { Education } from '@/components/sections/education'
-import { ContactCta } from '@/components/sections/contact-cta'
+import { HeroSection } from '@/components/home/hero-section'
+import { MarqueeSection } from '@/components/home/marquee-section'
+import { AboutSection } from '@/components/home/about-section'
+import { ExperienceSection } from '@/components/home/experience-section'
+import { ProjectsSection } from '@/components/home/projects-section'
 import { siteConfig } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -16,14 +14,12 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <>
-      <Hero />
-      <About />
-      <FeaturedProjects />
-      <Skills />
-      <Experience />
-      <Education />
-      <ContactCta />
-    </>
+    <div className="bg-[#0C0C0C]" style={{ overflowX: 'clip' }}>
+      <HeroSection />
+      <MarqueeSection />
+      <AboutSection />
+      <ExperienceSection />
+      <ProjectsSection />
+    </div>
   )
 }

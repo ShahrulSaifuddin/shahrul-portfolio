@@ -12,7 +12,7 @@ export function SectionHeader({
   eyebrow,
   title,
   description,
-  align = 'left',
+  align = 'center',
   className,
   as = 'h2',
 }: {
@@ -28,31 +28,25 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        'mb-12 space-y-3 sm:mb-16',
-        align === 'center' && 'text-center',
+        'mb-14 flex flex-col gap-5 sm:mb-20',
+        align === 'center' && 'items-center text-center',
         className
       )}
     >
-      <p className="text-xs font-mono uppercase tracking-[0.18em] text-muted-foreground">
+      <p className="text-muted-foreground text-xs font-light tracking-[0.3em] uppercase sm:text-sm">
         {eyebrow}
       </p>
       <Heading
         id={`${id}-heading`}
-        className={
-          as === 'h1'
-            ? 'text-3xl sm:text-4xl font-semibold tracking-[-0.02em] text-foreground'
-            : 'text-2xl font-semibold tracking-[-0.02em] text-foreground sm:text-3xl'
-        }
+        className="hero-heading leading-none font-black tracking-tight uppercase"
+        style={{
+          fontSize: as === 'h1' ? 'clamp(3rem, 12vw, 160px)' : 'clamp(2.5rem, 7vw, 96px)',
+        }}
       >
         {title}
       </Heading>
       {description ? (
-        <p
-          className={cn(
-            'max-w-[68ch] text-[0.9375rem] leading-relaxed text-muted-foreground sm:text-base',
-            align === 'center' && 'mx-auto'
-          )}
-        >
+        <p className="text-foreground/80 max-w-[60ch] leading-relaxed font-light sm:text-lg">
           {description}
         </p>
       ) : null}

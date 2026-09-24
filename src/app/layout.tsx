@@ -1,20 +1,22 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist_Mono, Kanit } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from '@/components/ui/sonner'
-import { Navigation } from '@/components/layout/navigation'
+import { SiteNav } from '@/components/layout/site-nav'
 import { Footer } from '@/components/layout/footer'
 import { ScrollProgress } from '@/components/layout/scroll-progress'
 import { BackToTop } from '@/components/layout/back-to-top'
+import { HideOnHome } from '@/components/layout/hide-on-home'
 import { Analytics } from '@/components/analytics'
 import { siteConfig } from '@/lib/site'
 import { profile } from '@/lib/data/profile'
 
-const geistSans = Geist({
+const kanit = Kanit({
   variable: '--font-sans',
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
   display: 'swap',
 })
 
@@ -75,24 +77,30 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${kanit.variable} ${geistMono.variable}`}
+    >
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className="antialiased">
         <ThemeProvider>
           <TooltipProvider>
             <a
               href="#main"
-              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-foreground focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+              className="focus:bg-foreground focus:text-background focus:ring-ring focus:ring-offset-background sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:ring-2 focus:ring-offset-2 focus:outline-none"
             >
               Skip to content
             </a>
-            <ScrollProgress />
-            <Navigation />
+            <HideOnHome>
+              <ScrollProgress />
+              <SiteNav />
+            </HideOnHome>
             {/*
               `tabIndex={-1}` is what makes the skip link actually work. A plain
               `<main id="main">` is not a focusable element, so activating
