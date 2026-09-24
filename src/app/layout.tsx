@@ -1,14 +1,18 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Archivo, Geist, Geist_Mono, Instrument_Serif } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from '@/components/ui/sonner'
 import { Navigation } from '@/components/layout/navigation'
 import { Footer } from '@/components/layout/footer'
-import { ScrollProgress } from '@/components/layout/scroll-progress'
 import { BackToTop } from '@/components/layout/back-to-top'
 import { Analytics } from '@/components/analytics'
+import { BOOT_INIT_SCRIPT, BootSequence } from '@/components/fx/boot-sequence'
+import { ChargeHud } from '@/components/fx/charge-hud'
+import { ClickSparks } from '@/components/fx/click-sparks'
+import { CursorGlow } from '@/components/fx/cursor-glow'
+import { SmoothScroll } from '@/components/fx/smooth-scroll'
 import { siteConfig } from '@/lib/site'
 import { profile } from '@/lib/data/profile'
 
@@ -23,6 +27,28 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
   display: 'swap',
 })
+
+// Display face. The variable width axis is the point: headings run at its
+// widest (125%), HUD labels can run condensed, from a single font file.
+const archivo = Archivo({
+  variable: '--font-display',
+  subsets: ['latin'],
+  axes: ['wdth'],
+  display: 'swap',
+})
+
+// Italic accent words only.
+const instrumentSerif = Instrument_Serif({
+  variable: '--font-serif',
+  subsets: ['latin'],
+  weight: '400',
+  style: 'italic',
+  display: 'swap',
+})
+
+export const viewport: Viewport = {
+  themeColor: '#0f1418',
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -77,12 +103,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Must run before first paint: decides whether the boot screen
+            plays, so there is never a flash of the page before it. */}
+        <script dangerouslySetInnerHTML={{ __html: BOOT_INIT_SCRIPT }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} ${instrumentSerif.variable} antialiased`}
+      >
         <ThemeProvider>
           <TooltipProvider>
             <a
@@ -91,7 +122,8 @@ export default function RootLayout({
             >
               Skip to content
             </a>
-            <ScrollProgress />
+            <BootSequence />
+            <SmoothScroll />
             <Navigation />
             {/*
               `tabIndex={-1}` is what makes the skip link actually work. A plain
@@ -106,7 +138,10 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
+            <ChargeHud />
             <BackToTop />
+            <ClickSparks />
+            <CursorGlow />
             <Toaster />
           </TooltipProvider>
         </ThemeProvider>

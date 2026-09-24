@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { Hero } from '@/components/sections/hero'
+import { StackTicker } from '@/components/sections/stack-ticker'
 import { About } from '@/components/sections/about'
 import { FeaturedProjects } from '@/components/sections/featured-projects'
 import { Skills } from '@/components/sections/skills'
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <StackTicker />
       <About />
       <FeaturedProjects />
       <Skills />

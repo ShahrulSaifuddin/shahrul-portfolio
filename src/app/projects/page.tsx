@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <Container as="div" className="py-20 sm:py-28 lg:py-32">
+    <Container as="div" className="pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pb-32">
       <SectionHeader
         id="projects"
         eyebrow="Selected work"

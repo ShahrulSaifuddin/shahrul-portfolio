@@ -1,12 +1,11 @@
-import { Check } from 'lucide-react'
-
 import { Container } from '@/components/layout/container'
 import { SectionHeader } from '@/components/layout/section-header'
-import { Reveal } from '@/components/motion/reveal'
+import { ScrubText } from '@/components/fx/scrub-text'
+import { SignalChain } from '@/components/sections/signal-chain'
 import { profile } from '@/lib/data/profile'
 
 // Derived from the verbatim summary's "owns end to end —" clause, not
-// re-authored, so the list stays a strict restatement of the same facts.
+// re-authored, so the chain stays a strict restatement of the same facts.
 const ownEndToEndItems = profile.summary
   .replace(/^.*end to end\s*—\s*/, '')
   .replace(/\.$/, '')
@@ -17,33 +16,39 @@ const ownEndToEndItems = profile.summary
 
 export function About() {
   return (
-    <section id="about" aria-labelledby="about-heading" className="py-20 sm:py-28 lg:py-32">
-      <Container>
+    <section
+      id="about"
+      data-hud="About"
+      aria-labelledby="about-heading"
+      className="relative overflow-hidden py-28 sm:py-36 lg:py-44"
+    >
+      <span
+        aria-hidden="true"
+        className="font-display-wide text-outline pointer-events-none absolute -top-6 -right-10 text-[26vw] leading-none font-black select-none"
+      >
+        01
+      </span>
+      <Container className="relative">
         <SectionHeader
           id="about"
+          index="01"
           eyebrow="About"
-          title="Engineering restraint, shipped."
-          description="Who's building this, and what they own end to end."
+          title="One engineer, the whole circuit."
+          accent={['circuit.']}
         />
-        <Reveal>
-          <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
-            <p className="max-w-[68ch] text-[0.9375rem] leading-relaxed text-muted-foreground sm:text-base">
-              {profile.summary}
-            </p>
 
-            <ul className="grid gap-3 sm:grid-cols-2 lg:w-80 lg:grid-cols-1">
-              {ownEndToEndItems.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-2.5 rounded-lg border border-border bg-card p-3 text-sm text-foreground"
-                >
-                  <Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Reveal>
+        <ScrubText
+          text={profile.summary}
+          highlight={['production', 'hardware', 'payment']}
+          className="font-display-wide max-w-[24em] text-[clamp(1.4rem,2.9vw,2.4rem)] leading-[1.2] font-semibold tracking-[-0.02em]"
+        />
+
+        <div className="mt-24 sm:mt-32">
+          <p className="mb-10 font-mono text-[11px] tracking-[0.22em] text-muted-foreground uppercase">
+            Owned end to end
+          </p>
+          <SignalChain items={ownEndToEndItems} />
+        </div>
       </Container>
     </section>
   )

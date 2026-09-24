@@ -3,7 +3,8 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu } from 'lucide-react'
+import { ArrowUpRight, Menu } from 'lucide-react'
+
 import {
   Sheet,
   SheetContent,
@@ -15,6 +16,7 @@ import {
 import { ThemeToggle } from '@/components/layout/theme-toggle'
 import { GitHubIcon } from '@/components/layout/icons'
 import { cn } from '@/lib/utils'
+import { profile } from '@/lib/data/profile'
 import type { NavItem } from '@/lib/types'
 
 function isLinkActive(pathname: string, href: string): boolean {
@@ -24,9 +26,9 @@ function isLinkActive(pathname: string, href: string): boolean {
 }
 
 /**
- * The `<768px` nav surface. Built on shadcn's `Sheet` (Radix Dialog), which
- * already provides focus trapping, `Esc`-to-close, focus return to the
- * trigger, and body scroll locking.
+ * The `<768px` nav: a full-height panel with oversized, numbered links.
+ * Built on shadcn's `Sheet` (Radix Dialog) for focus trapping, `Esc` to
+ * close, focus return and scroll locking.
  */
 export function MobileNav({
   links,
@@ -45,18 +47,20 @@ export function MobileNav({
           type="button"
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
-          className="inline-flex size-12 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:hidden"
+          className="inline-flex size-11 items-center justify-center rounded-full bg-foreground text-background transition-colors hover:bg-brand hover:text-brand-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none md:hidden"
         >
           <Menu className="size-5" aria-hidden="true" />
         </button>
       </SheetTrigger>
-      <SheetContent side="right" className="flex w-3/4 flex-col gap-0 p-0 sm:max-w-sm">
-        <SheetHeader className="border-b border-border px-6 py-4 text-left">
-          <SheetTitle>Menu</SheetTitle>
+      <SheetContent side="right" className="flex w-full flex-col gap-0 border-l-0 bg-background p-0 sm:max-w-md">
+        <SheetHeader className="px-6 pt-6 pb-2 text-left">
+          <SheetTitle className="font-mono text-[11px] font-medium tracking-[0.2em] text-muted-foreground uppercase">
+            Menu
+          </SheetTitle>
           <SheetDescription className="sr-only">Site navigation</SheetDescription>
         </SheetHeader>
-        <nav aria-label="Mobile" className="flex flex-1 flex-col gap-1 px-4 py-6">
-          {links.map((link) => {
+        <nav aria-label="Mobile" className="bg-grid flex flex-1 flex-col justify-center gap-1 px-6">
+          {links.map((link, i) => {
             const active = isLinkActive(pathname, link.href)
             return (
               <Link
@@ -65,29 +69,39 @@ export function MobileNav({
                 onClick={() => setOpen(false)}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'rounded-lg px-3 py-3 text-base font-medium transition-colors',
-                  active
-                    ? 'bg-muted text-foreground'
-                    : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                  'group flex items-baseline gap-4 rounded-lg py-2 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+                  active ? 'text-brand' : 'text-foreground hover:text-brand'
                 )}
               >
-                {link.label}
+                <span className="font-mono text-xs text-muted-foreground" aria-hidden="true">
+                  0{i + 1}
+                </span>
+                <span className="font-display-wide text-4xl font-bold uppercase">{link.label}</span>
               </Link>
             )
           })}
         </nav>
-        <div className="flex items-center justify-between border-t border-border px-6 py-4">
+        <div className="space-y-4 border-t border-border px-6 py-5">
           <a
-            href={githubHref}
-            target="_blank"
-            rel="noreferrer noopener"
-            onClick={() => setOpen(false)}
-            className="inline-flex size-12 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            aria-label="GitHub profile"
+            href={`mailto:${profile.email}`}
+            className="flex items-center justify-between text-sm text-muted-foreground hover:text-foreground"
           >
-            <GitHubIcon className="size-5" />
+            {profile.email}
+            <ArrowUpRight aria-hidden="true" className="size-4" />
           </a>
-          <ThemeToggle />
+          <div className="flex items-center justify-between">
+            <a
+              href={githubHref}
+              target="_blank"
+              rel="noreferrer noopener"
+              onClick={() => setOpen(false)}
+              className="inline-flex size-12 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              aria-label="GitHub profile"
+            >
+              <GitHubIcon className="size-5" />
+            </a>
+            <ThemeToggle className="rounded-full border border-border" />
+          </div>
         </div>
       </SheetContent>
     </Sheet>

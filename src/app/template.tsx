@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { DUR, EASE } from '@/lib/motion'
+import { scrollToTop } from '@/components/fx/smooth-scroll'
 
 const EASE_ARR = [...EASE] as [number, number, number, number]
 
@@ -16,8 +17,10 @@ export default function Template({ children }: { children: React.ReactNode }): R
   const reduceMotion = useReducedMotion()
 
   React.useEffect(() => {
-    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // An in-page anchor (e.g. /#about from another route) owns the scroll
+    // position; resetting to the top would throw it away.
+    if (window.location.hash) return
+    scrollToTop(true)
   }, [])
 
   if (reduceMotion) {

@@ -27,7 +27,7 @@ const DEMO_COUNT = performanceItems.filter((item) => item.demo !== null).length
 
 export default function PerformancePage() {
   return (
-    <Container as="div" className="py-20 sm:py-28 lg:py-32">
+    <Container as="div" className="pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pb-32">
       <SectionHeader
         as="h1"
         id="performance"

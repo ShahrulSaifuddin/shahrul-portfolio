@@ -6,14 +6,18 @@ import { DUR, EASE, staggerParent } from '@/lib/motion'
 
 type RevealTag = 'div' | 'section' | 'article' | 'li' | 'ul' | 'header'
 
-const MOTION_TAG: Record<RevealTag, React.ElementType> = {
+// Typed as one motion component rather than `React.ElementType`: with
+// @react-three/fiber installed, the global JSX namespace also carries every
+// three.js element, and the `ElementType` prop intersection collapses to
+// `never`. All six share the same HTML motion props for what we pass.
+const MOTION_TAG = {
   div: motion.div,
   section: motion.section,
   article: motion.article,
   li: motion.li,
   ul: motion.ul,
   header: motion.header,
-}
+} as unknown as Record<RevealTag, typeof motion.div>
 
 const EASE_ARR = [...EASE] as [number, number, number, number]
 

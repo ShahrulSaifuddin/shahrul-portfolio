@@ -17,8 +17,23 @@ skills, experience, education, the performance checklist) lives in a typed data 
 - **shadcn/ui** primitives (`radix-nova` style) on top of the consolidated `radix-ui` package —
   installed under `src/components/ui/`: button, card, badge, input, textarea, label, sheet,
   dialog, tabs, skeleton, separator, tooltip, accordion, progress, sonner.
-- **Framer Motion 13.4.0** for section entrances, hover states and the animated nav indicator —
-  every animation respects `prefers-reduced-motion` via `useReducedMotion()`.
+- **Framer Motion 13.4.0** for scroll-linked motion (pinned horizontal gallery, scrubbed text,
+  timeline wire), entrances and hover states — every animation respects `prefers-reduced-motion`.
+- **Lenis** inertial wheel scrolling (skipped under reduced motion; touch keeps native scroll).
+- **three.js + @react-three/fiber + drei + @react-three/rapier** for the draggable 3D ID badge in
+  the hero (desktop only, loaded with `next/dynamic` after the boot screen).
+- **React Bits** (reactbits.dev) components, adapted in `src/components/fx/`: Lightning,
+  ElectricBorder, Lanyard, ScrollVelocity, ClickSpark, SpotlightCard, Magnet, RotatingText,
+  DecryptedText and ScrollReveal — each reworked to pause offscreen and honour reduced motion.
+
+### Design: "Live Wire"
+
+The site is a circuit you power up by scrolling — a nod to the EEE degree and the EV-charging work.
+A once-per-session boot screen plays a charge-point handshake; the hero name ignites like neon;
+scroll progress is shown as a battery "state of charge" (bottom-left) with a circuit rail of
+section nodes (left edge, `xl+`). Typefaces: Archivo (variable width, run at 125% for display),
+Geist, Geist Mono and Instrument Serif italic for accent words. The hero and closing CTA are
+forced-dark "islands" in both themes.
 - **Resend** for contact-form email delivery, **Zod** + **react-hook-form** for validation.
 - **next/og** (`ImageResponse`) for the generated Open Graph image.
 
@@ -45,6 +60,9 @@ src/
     contact/                  Contact form
     performance/              Checklist + live demo components (debounce, skeleton, pagination, ...)
     motion/                   Shared `Reveal` scroll-entrance wrapper
+    fx/                       Effects layer: boot screen, charge HUD, Lenis, sparks, cursor,
+                              adapted React Bits components, and lanyard/ (3D badge + its
+                              runtime-painted card texture)
     providers/                Theme provider
     ui/                       shadcn/ui primitives (read-only, do not hand-edit)
   lib/
@@ -57,6 +75,8 @@ src/
     motion.ts                 Shared Framer Motion easing/duration constants
 public/
   images/profile.jpg                        Profile photo
+  3d/card.glb                               Badge model (from React Bits' Lanyard; embedded
+                                            texture stripped — the card art is painted at runtime)
   Shahrul_Saifuddin_Resume_2026.pdf          Downloadable resume
 ```
 

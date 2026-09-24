@@ -84,8 +84,12 @@ function MetricValue({
 }
 
 /**
- * A row of mono-numeral metrics with labels beneath. Used for the hero
+ * A strip of instrument-panel readouts: big display numerals, a mono label
+ * beneath, hairline cells, and a small lit "LED" per cell. Used for the hero
  * headline stats and per-project metric strips.
+ *
+ * DOM contract (e2e/hero-metrics.spec.ts): each label <span> is a direct
+ * child of its cell, and that cell holds exactly one `.tabular-nums` numeral.
  */
 export function MetricRail({
   metrics,
@@ -96,19 +100,31 @@ export function MetricRail({
   className?: string
   countUp?: boolean
 }): React.ReactElement {
+  const cols = metrics.length >= 4 ? 'lg:grid-cols-4' : metrics.length === 3 ? 'lg:grid-cols-3' : ''
   return (
     <div
       className={cn(
-        'grid grid-cols-2 divide-x divide-border border-y border-border sm:grid-cols-4',
+        'grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border',
+        metrics.length === 5 ? 'lg:grid-cols-5' : cols,
         className
       )}
     >
-      {metrics.map((metric) => (
-        <div key={metric.label} className="flex flex-col gap-1 px-4 py-4 first:pl-0 sm:px-6">
-          <span className="font-mono text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+      {metrics.map((metric, i) => (
+        <div
+          key={metric.label}
+          className="group relative flex flex-col gap-2 bg-background/80 p-5 backdrop-blur-sm transition-colors duration-300 hover:bg-card sm:p-6"
+        >
+          <span
+            aria-hidden="true"
+            className="animate-led absolute top-5 right-5 size-1.5 rounded-full bg-brand shadow-[0_0_8px_var(--brand)]"
+            style={{ animationDelay: `${i * 0.4}s` }}
+          />
+          <span className="font-display-wide text-4xl leading-none font-bold text-foreground transition-colors duration-300 group-hover:text-brand sm:text-5xl">
             <MetricValue value={metric.value} countUp={countUp} />
           </span>
-          <span className="text-xs text-muted-foreground">{metric.label}</span>
+          <span className="max-w-[26ch] font-mono text-[11px] leading-snug tracking-wide text-muted-foreground uppercase">
+            {metric.label}
+          </span>
         </div>
       ))}
     </div>

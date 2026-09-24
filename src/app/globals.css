@@ -1,15 +1,22 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "lenis/dist/lenis.css";
 
-@custom-variant dark (&:is(.dark *));
+/* `:where(.dark, .dark *)` rather than `:is(.dark *)`: the hero and the
+   closing CTA are forced-dark "islands" (`class="dark"` on the section), and
+   the island element itself must match `dark:` utilities, not only its
+   descendants. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-display);
+  --font-display: var(--font-display);
+  --font-serif: var(--font-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -42,6 +49,8 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-muted: var(--brand-muted);
+  --color-arc: var(--arc);
+  --color-spark: var(--spark);
   --color-success: var(--success);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -52,49 +61,50 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ---------------------------------------------------------------------------
+   "Live Wire" palette. Near-black blue graphite, a single volt-green brand
+   (the colour of a charge point's "ready" LED), an electric-blue arc used
+   only inside gradients, and an amber spark used only for tiny HUD accents.
+   Every text pair is gated by scripts/check-contrast.mjs.
+   --------------------------------------------------------------------------- */
+
 :root {
-  --background: oklch(0.995 0 0);
-  --foreground: oklch(0.205 0.005 285);
+  --background: oklch(0.985 0.004 255);
+  --foreground: oklch(0.18 0.015 255);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.205 0.005 285);
+  --card-foreground: oklch(0.18 0.015 255);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.205 0.005 285);
-  /* BRAND teal — shadcn's default <Button> is the primary CTA. */
-  /* Darkened from 0.58 to 0.53: measured 3.92:1 with --primary-foreground, below
-     the 4.5:1 text-contrast requirement. 0.53 measures 4.76:1. */
-  --primary: oklch(0.53 0.12 168);
-  --primary-foreground: oklch(0.99 0.01 168);
-  --secondary: oklch(0.968 0.002 285);
-  --secondary-foreground: oklch(0.205 0.005 285);
-  --muted: oklch(0.968 0.002 285);
-  --muted-foreground: oklch(0.505 0.008 285); /* passes 4.5:1 on --background */
+  --popover-foreground: oklch(0.18 0.015 255);
+  --primary: oklch(0.5 0.12 165);
+  --primary-foreground: oklch(0.99 0.01 165);
+  --secondary: oklch(0.955 0.006 255);
+  --secondary-foreground: oklch(0.18 0.015 255);
+  --muted: oklch(0.955 0.006 255);
+  --muted-foreground: oklch(0.49 0.015 255);
   /* NEUTRAL hover surface — shadcn semantics. Do NOT repurpose with brand color. */
-  --accent: oklch(0.968 0.002 285);
-  --accent-foreground: oklch(0.205 0.005 285);
-  --destructive: oklch(0.58 0.21 27);
-  /* Decorative hairline dividers between cards — NOT a form-control border, not
-     covered by WCAG 1.4.11. Deliberately lower contrast than --input; do not
-     "tidy" these back to the same value. */
-  --border: oklch(0.918 0.004 285);
-  /* Form-control (input) border — governed by WCAG 1.4.11 (3:1 non-text
-     contrast). Measured 1.26:1 at the old value; 0.65 measures 3.21:1.
-     Deliberately different from --border; do not merge them. */
-  --input: oklch(0.65 0.004 285);
-  /* Tracks the corrected --primary above. */
-  --ring: oklch(0.53 0.12 168);
-  /* Brand tokens: rails, active indicators, metric highlights, badges — not buttons. */
-  /* Darkened from 0.52 to 0.50: measured exactly 4.50:1 on --brand-muted (no
-     margin). 0.50 measures 4.87:1. */
-  --brand: oklch(0.50 0.12 168);
-  --brand-foreground: oklch(0.99 0.01 168);
-  --brand-muted: oklch(0.955 0.03 168);
-  --success: oklch(0.52 0.12 168);
+  --accent: oklch(0.945 0.006 255);
+  --accent-foreground: oklch(0.18 0.015 255);
+  --destructive: oklch(0.55 0.21 27);
+  /* Decorative hairline dividers — NOT a form-control border (not WCAG 1.4.11).
+     Deliberately lower contrast than --input; do not merge them. */
+  --border: oklch(0.905 0.008 255);
+  /* Form-control border — WCAG 1.4.11 (3:1 non-text contrast). */
+  --input: oklch(0.63 0.01 255);
+  --ring: oklch(0.5 0.12 165);
+  --brand: oklch(0.48 0.12 165);
+  --brand-foreground: oklch(0.99 0.01 165);
+  --brand-muted: oklch(0.95 0.035 165);
+  --arc: oklch(0.55 0.15 240);
+  --spark: oklch(0.62 0.16 60);
+  --success: oklch(0.5 0.12 165);
+  --grid-line: oklch(0.18 0.015 255 / 0.06);
+  --glow: oklch(0.5 0.12 165 / 0.18);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  --radius: 0.75rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -103,39 +113,40 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  color-scheme: light;
 }
 
 .dark {
-  --background: oklch(0.165 0.004 285);
-  --foreground: oklch(0.955 0.002 285);
-  --card: oklch(0.205 0.005 285);
-  --card-foreground: oklch(0.955 0.002 285);
-  --popover: oklch(0.205 0.005 285);
-  --popover-foreground: oklch(0.955 0.002 285);
-  /* BRAND teal, lifted for dark bg. */
-  --primary: oklch(0.76 0.13 168);
-  --primary-foreground: oklch(0.17 0.03 168);
-  --secondary: oklch(0.265 0.005 285);
-  --secondary-foreground: oklch(0.955 0.002 285);
-  --muted: oklch(0.245 0.005 285);
-  --muted-foreground: oklch(0.735 0.008 285); /* passes 4.5:1 on dark --background */
+  --background: oklch(0.145 0.012 255);
+  --foreground: oklch(0.97 0.004 255);
+  --card: oklch(0.185 0.014 255);
+  --card-foreground: oklch(0.97 0.004 255);
+  --popover: oklch(0.185 0.014 255);
+  --popover-foreground: oklch(0.97 0.004 255);
+  /* Volt green — a charge point's "ready" LED. */
+  --primary: oklch(0.86 0.18 162);
+  --primary-foreground: oklch(0.18 0.04 162);
+  --secondary: oklch(0.23 0.014 255);
+  --secondary-foreground: oklch(0.97 0.004 255);
+  --muted: oklch(0.215 0.014 255);
+  --muted-foreground: oklch(0.74 0.015 255);
   /* NEUTRAL hover surface — shadcn semantics. Do NOT repurpose with brand color. */
-  --accent: oklch(0.265 0.005 285);
-  --accent-foreground: oklch(0.955 0.002 285);
-  --destructive: oklch(0.66 0.19 27);
-  /* Decorative hairline dividers between cards — NOT a form-control border, not
-     covered by WCAG 1.4.11. Deliberately lower contrast than --input; do not
-     "tidy" these back to the same value. */
-  --border: oklch(0.295 0.006 285);
-  /* Form-control (input) border — governed by WCAG 1.4.11 (3:1 non-text
-     contrast). Measured 1.39:1 at the old value; 0.52 measures 3.49:1.
-     Deliberately different from --border; do not merge them. */
-  --input: oklch(0.52 0.006 285);
-  --ring: oklch(0.76 0.13 168);
-  --brand: oklch(0.78 0.13 168);
-  --brand-foreground: oklch(0.17 0.03 168);
-  --brand-muted: oklch(0.27 0.045 168);
-  --success: oklch(0.78 0.13 168);
+  --accent: oklch(0.25 0.015 255);
+  --accent-foreground: oklch(0.97 0.004 255);
+  --destructive: oklch(0.68 0.19 27);
+  /* Decorative hairline dividers — NOT a form-control border (not WCAG 1.4.11). */
+  --border: oklch(0.29 0.016 255);
+  /* Form-control border — WCAG 1.4.11 (3:1 non-text contrast). */
+  --input: oklch(0.55 0.016 255);
+  --ring: oklch(0.86 0.18 162);
+  --brand: oklch(0.86 0.18 162);
+  --brand-foreground: oklch(0.18 0.04 162);
+  --brand-muted: oklch(0.27 0.06 162);
+  --arc: oklch(0.78 0.14 230);
+  --spark: oklch(0.84 0.16 75);
+  --success: oklch(0.86 0.18 162);
+  --grid-line: oklch(0.97 0.004 255 / 0.05);
+  --glow: oklch(0.86 0.18 162 / 0.22);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -149,33 +160,246 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  color-scheme: dark;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  /* font-sans goes on <body>, not <html>: next/font defines --font-sans on
+     body's class, so on <html> the variable is unresolved and the whole site
+     silently falls back to the UA serif. */
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-foreground;
+    font-feature-settings: 'ss01', 'cv11';
   }
   html {
-    @apply font-sans;
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 6rem;
+  }
+  ::selection {
+    background: var(--brand);
+    color: var(--brand-foreground);
   }
   @media (prefers-reduced-motion: no-preference) {
-    html {
+    html:not(.lenis) {
       scroll-behavior: smooth;
     }
   }
-  /* Applies to every shadcn `<Skeleton>` (it sets data-slot="skeleton") site-
-     wide — the route loading.tsx files and the /performance skeleton demo —
-     without editing the read-only ui/skeleton.tsx primitive itself. A pulsing
-     placeholder is exactly the kind of non-essential motion
-     prefers-reduced-motion asks sites to drop; a static muted block still
-     communicates "loading" without the animation. */
+  /* A static muted block still communicates "loading" without the pulse. */
   @media (prefers-reduced-motion: reduce) {
     [data-slot='skeleton'] {
       animation: none;
     }
+  }
+}
+
+@layer utilities {
+  /* Display face: Archivo at its widest cut, set tight. */
+  .font-display-wide {
+    font-family: var(--font-display);
+    font-stretch: 125%;
+    font-variation-settings: 'wdth' 125;
+    letter-spacing: -0.035em;
+  }
+  .font-display-condensed {
+    font-family: var(--font-display);
+    font-stretch: 75%;
+    font-variation-settings: 'wdth' 75;
+  }
+
+  /* Engineering-paper grid. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  .bg-grid-fade {
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 100%);
+  }
+
+  /* Film grain — a static SVG turbulence tile, no animation cost. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .text-glow {
+    text-shadow:
+      0 0 18px var(--glow),
+      0 0 42px var(--glow);
+  }
+
+  .text-gradient-volt {
+    background: linear-gradient(100deg, var(--brand) 0%, var(--arc) 60%, var(--brand) 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Stroked outline type for oversized background words. */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 22%, transparent);
+  }
+
+  .hairline-x {
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Boot screen + neon ignition. `data-boot` is set on <html> by an inline
+   script before first paint (see components/fx/boot-sequence.tsx). With no
+   JavaScript it is never set: the overlay stays hidden and the type stays lit.
+   --------------------------------------------------------------------------- */
+.boot-screen {
+  display: none;
+}
+html[data-boot='pending'] .boot-screen,
+.boot-screen.is-exiting {
+  display: flex;
+}
+.boot-screen.is-exiting {
+  animation: boot-lift 0.85s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+@keyframes boot-lift {
+  from { clip-path: inset(0 0 0 0); }
+  to { clip-path: inset(0 0 100% 0); }
+}
+
+.neon-char {
+  display: inline-block;
+  color: var(--neon-color, var(--foreground));
+}
+html[data-boot='pending'] .neon-char {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 22%, transparent);
+}
+html[data-boot='done'] .neon-char {
+  animation: neon-ignite 1.2s linear both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes neon-ignite {
+  0% {
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 22%, transparent);
+    text-shadow: none;
+  }
+  6% { color: var(--neon-color, var(--foreground)); text-shadow: 0 0 22px var(--glow); }
+  10% { color: transparent; text-shadow: none; }
+  18% { color: var(--neon-color, var(--foreground)); text-shadow: 0 0 28px var(--glow); }
+  21% { color: transparent; text-shadow: none; }
+  34%, 100% {
+    color: var(--neon-color, var(--foreground));
+    -webkit-text-stroke: 0 transparent;
+    text-shadow: 0 0 30px var(--glow);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-boot] .neon-char {
+    animation: none;
+    color: var(--neon-color, var(--foreground));
+    -webkit-text-stroke: 0 transparent;
+  }
+}
+
+/* Animated dash for "current flowing through a wire". */
+@keyframes current-flow {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+.animate-current {
+  animation: current-flow 1.2s linear infinite;
+}
+
+@keyframes blink-led {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.animate-led {
+  animation: blink-led 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer-x {
+  to { background-position: -200% 0; }
+}
+.animate-shimmer {
+  animation: shimmer-x 6s linear infinite;
+}
+
+@keyframes scan-y {
+  0% { transform: translateY(-10%); opacity: 0; }
+  10%, 90% { opacity: 1; }
+  100% { transform: translateY(1100%); opacity: 0; }
+}
+.animate-scan {
+  animation: scan-y 2.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 18s linear infinite;
+}
+
+/* Project instruments (components/projects/project-visual.tsx) */
+.gauge-sweep {
+  stroke-dashoffset: var(--c);
+  animation: gauge-sweep 5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes gauge-sweep {
+  0% { stroke-dashoffset: var(--c); }
+  70%, 88% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+.catalogue-tile {
+  animation: tile-pulse 2.8s ease-in-out infinite;
+}
+@keyframes tile-pulse {
+  0%, 60%, 100% { border-color: var(--border); box-shadow: none; }
+  20% {
+    border-color: var(--brand);
+    box-shadow: 0 0 18px -4px var(--brand), inset 0 0 12px -6px var(--brand);
+  }
+}
+.typing-dots::after {
+  content: '';
+  display: inline-block;
+  width: 1.2em;
+  text-align: left;
+  animation: typing 1.2s steps(4, end) infinite;
+}
+@keyframes typing {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75%, 100% { content: '...'; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gauge-sweep {
+    animation: none;
+    stroke-dashoffset: calc(var(--c) * 0.25);
+  }
+  .catalogue-tile,
+  .typing-dots::after {
+    animation: none;
+  }
+  .animate-current,
+  .animate-led,
+  .animate-shimmer,
+  .animate-scan,
+  .animate-spin-slow {
+    animation: none;
   }
 }
