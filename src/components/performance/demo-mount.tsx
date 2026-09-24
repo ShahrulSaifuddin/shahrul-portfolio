@@ -58,8 +58,21 @@ const DEMOS: Record<Exclude<PerformanceDemo, null>, ComponentType> = {
 export function DemoMount({ demo }: { demo: Exclude<PerformanceDemo, null> }) {
   const Demo = DEMOS[demo]
   return (
-    <div className="rounded-lg border border-border bg-muted/30 p-4">
-      <Demo />
+    <div className="overflow-hidden rounded-xl border border-border bg-background">
+      {/* Console chrome — decorative. */}
+      <div aria-hidden="true" className="flex items-center gap-3 border-b border-border bg-muted/50 px-4 py-2.5">
+        <span className="flex gap-1.5">
+          <span className="size-2.5 rounded-full bg-border" />
+          <span className="size-2.5 rounded-full bg-border" />
+          <span className="size-2.5 rounded-full bg-brand" />
+        </span>
+        <span className="font-mono text-[11px] tracking-[0.14em] text-muted-foreground uppercase">
+          live demo · {demo}
+        </span>
+      </div>
+      <div className="bg-grid p-4 sm:p-6">
+        <Demo />
+      </div>
     </div>
   )
 }

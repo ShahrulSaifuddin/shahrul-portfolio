@@ -4,8 +4,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 /**
  * Shown instantly on navigation to /contact, before the real page has
- * rendered — mirrors the form fields and the direct-contact sidebar at their
- * real dimensions, so nothing shifts when the real content swaps in.
+ * rendered — mirrors the console-framed form and the three sidebar panels
+ * at their real dimensions, so nothing shifts when the real content swaps in.
  */
 export default function ContactLoading() {
   return (
@@ -16,37 +16,36 @@ export default function ContactLoading() {
 
       <PageHeaderSkeleton />
 
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
-        <div className="max-w-3xl space-y-5">
-          {/* Name, Email, Subject: label + single-line input */}
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="space-y-1.5">
-              <Skeleton className="h-3 w-16" />
-              <Skeleton className="h-9 w-full rounded-md" />
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
+        <div className="overflow-hidden rounded-3xl border border-border">
+          <Skeleton className="h-11 w-full rounded-none" />
+          <div className="space-y-6 p-5 sm:p-8">
+            <div className="grid gap-6 sm:grid-cols-2">
+              {Array.from({ length: 2 }).map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-13 w-full rounded-xl" />
+                </div>
+              ))}
             </div>
-          ))}
-          {/* Message: label + 6-row textarea */}
-          <div className="space-y-1.5">
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="h-32 w-full rounded-md" />
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-13 w-full rounded-xl" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-44 w-full rounded-xl" />
+            </div>
+            <div className="flex justify-end border-t border-border pt-6">
+              <Skeleton className="h-14 w-44 rounded-full" />
+            </div>
           </div>
-          <Skeleton className="h-9 w-32 rounded-md" />
         </div>
 
-        <div className="space-y-4">
-          <Skeleton className="h-5 w-32" />
-          <div className="space-y-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex items-center gap-3 rounded-lg border border-border p-3">
-                <Skeleton className="size-4 shrink-0 rounded-sm" />
-                <div className="flex-1 space-y-1.5">
-                  <Skeleton className="h-2.5 w-14" />
-                  <Skeleton className="h-4 w-32" />
-                </div>
-              </div>
-            ))}
-          </div>
-          <Skeleton className="h-3 w-28" />
+        <div className="space-y-5">
+          <Skeleton className="h-40 w-full rounded-2xl" />
+          <Skeleton className="h-72 w-full rounded-2xl" />
+          <Skeleton className="h-40 w-full rounded-2xl" />
         </div>
       </div>
     </Container>

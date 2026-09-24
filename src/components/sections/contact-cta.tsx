@@ -5,7 +5,8 @@ import { Container } from '@/components/layout/container'
 import { GitHubIcon } from '@/components/layout/icons'
 import { Magnetic } from '@/components/fx/magnetic'
 import { RevealWords } from '@/components/fx/reveal-words'
-import { CopyEmail, FinaleBackdrop, KineticLines } from '@/components/sections/contact-finale'
+import { FinaleBackdrop, KineticLines } from '@/components/sections/contact-finale'
+import { CopyEmail } from '@/components/fx/copy-email'
 import { profile } from '@/lib/data/profile'
 
 /**

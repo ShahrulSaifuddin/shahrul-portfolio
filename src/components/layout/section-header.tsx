@@ -24,7 +24,7 @@ export function SectionHeader({
   eyebrow: string
   title: string
   description?: string
-  /** Two-digit section number, e.g. `'02'`. */
+  /** Section number (e.g. `'02'`) or, on inner pages, the route (`'/projects'`). */
   index?: string
   /** Words of `title` set in the italic accent face. */
   accent?: readonly string[]

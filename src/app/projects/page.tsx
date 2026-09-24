@@ -1,10 +1,22 @@
 import type { Metadata } from 'next'
 
 import { Container } from '@/components/layout/container'
+import { MetricRail } from '@/components/layout/metric-rail'
+import { PageBackdrop } from '@/components/layout/page-backdrop'
 import { SectionHeader } from '@/components/layout/section-header'
 import { ProjectFilter } from '@/components/projects/project-filter'
 import { allProjectTech, projects } from '@/lib/data/projects'
 import { siteConfig } from '@/lib/site'
+
+// Every figure is counted from the data layer, not typed in.
+const STATS = [
+  { value: String(projects.length), label: 'Production systems shipped end to end' },
+  {
+    value: String(projects.filter((p) => p.status.includes('App Store')).length),
+    label: 'Apps live on both mobile stores',
+  },
+  { value: String(allProjectTech.length), label: 'Technologies across the four stacks' },
+]
 
 // The root layout sets `title.template` to `%s — <name>`, so a page title must
 // NOT repeat the site name — doing so rendered
@@ -34,16 +46,23 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <Container as="div" className="pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pb-32">
-      <SectionHeader
-        id="projects"
-        eyebrow="Selected work"
-        title="Projects"
-        description="Mobile apps, backend APIs, and web platforms shipped end to end — filter by technology or search across role, stack and highlights."
-        as="h1"
-      />
+    <div className="relative isolate">
+      <PageBackdrop />
+      <Container as="div" className="pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pb-32">
+        <SectionHeader
+          id="projects"
+          index="/projects"
+          eyebrow="Selected work"
+          title="Projects, in production."
+          accent={['production.']}
+          description="Mobile apps, backend APIs, and web platforms shipped end to end — filter by technology or search across role, stack and highlights."
+          as="h1"
+        />
 
-      <ProjectFilter projects={projects} allTech={allProjectTech} />
-    </Container>
+        <MetricRail metrics={STATS} countUp className="mb-12 sm:mb-16" />
+
+        <ProjectFilter projects={projects} allTech={allProjectTech} />
+      </Container>
+    </div>
   )
 }
