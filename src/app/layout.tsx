@@ -7,12 +7,14 @@ import { Toaster } from '@/components/ui/sonner'
 import { Navigation } from '@/components/layout/navigation'
 import { Footer } from '@/components/layout/footer'
 import { BackToTop } from '@/components/layout/back-to-top'
+import { HireBar } from '@/components/layout/hire-bar'
 import { Analytics } from '@/components/analytics'
 import { BOOT_INIT_SCRIPT, BootSequence } from '@/components/fx/boot-sequence'
 import { ChargeHud } from '@/components/fx/charge-hud'
 import { ClickSparks } from '@/components/fx/click-sparks'
 import { CursorGlow } from '@/components/fx/cursor-glow'
 import { SmoothScroll } from '@/components/fx/smooth-scroll'
+import { SceneBackdrop } from '@/components/scene/scene-backdrop'
 import { siteConfig } from '@/lib/site'
 import { profile } from '@/lib/data/profile'
 
@@ -124,6 +126,7 @@ export default function RootLayout({
             </a>
             <BootSequence />
             <SmoothScroll />
+            <SceneBackdrop />
             <Navigation />
             {/*
               `tabIndex={-1}` is what makes the skip link actually work. A plain
@@ -140,6 +143,7 @@ export default function RootLayout({
             <Footer />
             <ChargeHud />
             <BackToTop />
+            <HireBar />
             <ClickSparks />
             <CursorGlow />
             <Toaster />

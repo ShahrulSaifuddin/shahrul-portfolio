@@ -267,47 +267,57 @@ html[data-boot='pending'] .boot-screen,
 .boot-screen.is-exiting {
   display: flex;
 }
-.boot-screen.is-exiting {
-  animation: boot-lift 0.85s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+/* Exit: the panel opens like an iris from the centre. `--iris` is a
+   registered length so it can animate inside the mask gradient; browsers
+   without @property simply fade (the opacity keyframe). */
+@property --iris {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
 }
-@keyframes boot-lift {
-  from { clip-path: inset(0 0 0 0); }
-  to { clip-path: inset(0 0 100% 0); }
+.boot-screen.is-exiting {
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--iris), #000 calc(var(--iris) + 1.5px));
+  mask-image: radial-gradient(circle at 50% 50%, transparent var(--iris), #000 calc(var(--iris) + 1.5px));
+  animation: boot-iris 1.15s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+.boot-screen.is-exiting .boot-fade {
+  transition: opacity 0.35s ease, transform 0.6s cubic-bezier(0.7, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(-1.5rem);
+}
+@keyframes boot-iris {
+  0% { --iris: 0px; opacity: 1; }
+  85% { opacity: 1; }
+  100% { --iris: 150vmax; opacity: 0; }
 }
 
-.neon-char {
+/* 3D letter entrance (components/fx/hero-name.tsx): each letter flips up out
+   of the floor once the loader lifts. Fails open without JavaScript. */
+.char-3d {
   display: inline-block;
-  color: var(--neon-color, var(--foreground));
+  transform-origin: 50% 85%;
+  backface-visibility: hidden;
 }
-html[data-boot='pending'] .neon-char {
-  color: transparent;
-  -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 22%, transparent);
+html[data-boot='pending'] .char-3d {
+  opacity: 0;
 }
-html[data-boot='done'] .neon-char {
-  animation: neon-ignite 1.2s linear both;
+html[data-boot='done'] .char-3d {
+  animation: char-rise 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: var(--d, 0ms);
 }
-@keyframes neon-ignite {
-  0% {
-    color: transparent;
-    -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 22%, transparent);
-    text-shadow: none;
+@keyframes char-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.55em, -0.6em) rotateX(-96deg);
+    filter: blur(10px);
   }
-  6% { color: var(--neon-color, var(--foreground)); text-shadow: 0 0 22px var(--glow); }
-  10% { color: transparent; text-shadow: none; }
-  18% { color: var(--neon-color, var(--foreground)); text-shadow: 0 0 28px var(--glow); }
-  21% { color: transparent; text-shadow: none; }
-  34%, 100% {
-    color: var(--neon-color, var(--foreground));
-    -webkit-text-stroke: 0 transparent;
-    text-shadow: 0 0 30px var(--glow);
-  }
+  45% { opacity: 1; filter: blur(0); }
+  to { opacity: 1; transform: none; filter: blur(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[data-boot] .neon-char {
+  html[data-boot] .char-3d {
     animation: none;
-    color: var(--neon-color, var(--foreground));
-    -webkit-text-stroke: 0 transparent;
+    opacity: 1;
   }
 }
 

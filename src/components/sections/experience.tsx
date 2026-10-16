@@ -14,7 +14,7 @@ export function Experience() {
       <Container>
         <SectionHeader
           id="experience"
-          index="04"
+          index="06"
           eyebrow="Career"
           title="Five years on the wire."
           accent={['wire.']}

@@ -52,7 +52,7 @@ export function Skills() {
       <Container>
         <SectionHeader
           id="skills"
-          index="03"
+          index="05"
           eyebrow="Toolset"
           title="The stack, wired together."
           accent={['wired']}

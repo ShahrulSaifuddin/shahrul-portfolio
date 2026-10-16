@@ -18,9 +18,15 @@ export default function Template({ children }: { children: React.ReactNode }): R
 
   React.useEffect(() => {
     // An in-page anchor (e.g. /#about from another route) owns the scroll
-    // position; resetting to the top would throw it away.
+    // position; resetting to the top would throw it away. Everything else —
+    // links, reloads, back/forward — starts at the top (see BOOT_INIT_SCRIPT,
+    // which turns off the browser's own scroll restoration).
     if (window.location.hash) return
     scrollToTop(true)
+    // Late layout (fonts, the pinned gallery measuring itself) can nudge the
+    // position after the first frame; pin it once more.
+    const id = window.requestAnimationFrame(() => scrollToTop(true))
+    return () => window.cancelAnimationFrame(id)
   }, [])
 
   if (reduceMotion) {

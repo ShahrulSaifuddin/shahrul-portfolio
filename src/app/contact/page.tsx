@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ArrowUpRight, Mail, Phone } from 'lucide-react'
+import { ArrowUpRight, Mail, MessageCircle, Phone } from 'lucide-react'
 
 import { Container } from '@/components/layout/container'
 import { PageBackdrop } from '@/components/layout/page-backdrop'
@@ -8,7 +8,9 @@ import { GitHubIcon } from '@/components/layout/icons'
 import { ContactForm } from '@/components/contact/contact-form'
 import { LocalTime } from '@/components/fx/local-time'
 import { CopyEmail } from '@/components/fx/copy-email'
-import { profile } from '@/lib/data/profile'
+import { Perspective } from '@/components/fx/perspective'
+import { TiltCard } from '@/components/fx/tilt-card'
+import { freelance, profile } from '@/lib/data/profile'
 import { siteConfig } from '@/lib/site'
 
 const description = `Get in touch with ${profile.displayName}, a ${profile.title.toLowerCase()} based in ${profile.location}.`
@@ -28,9 +30,9 @@ export const metadata: Metadata = {
 }
 
 const INCLUDE = [
-  'The role or project, and the team behind it',
-  'Where it stands today — idea, build, or in production',
-  'The stack, if it is already chosen',
+  'What you are building, and who it is for',
+  'Where it stands today — idea, design, or already live',
+  'Your timeline and budget range, if you have one',
 ] as const
 
 export default function ContactPage() {
@@ -38,6 +40,7 @@ export default function ContactPage() {
 
   const lines = [
     { href: `mailto:${profile.email}`, label: 'Email', value: profile.email, Icon: Mail, external: false },
+    { href: freelance.whatsapp, label: 'WhatsApp', value: profile.phone, Icon: MessageCircle, external: true },
     { href: telHref, label: 'Phone', value: profile.phone, Icon: Phone, external: false },
     {
       href: profile.github,
@@ -59,28 +62,30 @@ export default function ContactPage() {
           eyebrow="Get in touch"
           title="Contact — open a channel."
           accent={['channel.']}
-          description="Open to full-stack, mobile and backend roles. The form below goes straight to my inbox, or reach out directly using the details alongside it."
+          description="Available for freelance projects — mobile apps, websites, APIs and payment integrations. The form below goes straight to my inbox, or reach out on WhatsApp or email alongside it."
         />
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
-          <div>
+          <Perspective depth={0.4}>
             <ContactForm />
-          </div>
+          </Perspective>
 
           <aside aria-labelledby="direct-contact-heading" className="space-y-5">
             {/* Availability */}
-            <div className="rounded-2xl border border-brand/30 bg-brand-muted/40 p-6">
-              <p className="flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] text-brand uppercase">
-                <span aria-hidden="true" className="animate-led size-2 rounded-full bg-brand shadow-[0_0_10px_var(--brand)]" />
-                Available
-              </p>
-              <p className="font-display-wide mt-4 text-xl leading-snug font-bold">
-                Full-stack, mobile &amp; backend roles.
-              </p>
-              <p className="mt-4 font-mono text-xs text-muted-foreground">
-                {profile.location} · <LocalTime /> MYT
-              </p>
-            </div>
+            <TiltCard className="rounded-2xl" max={8}>
+              <div className="rounded-2xl border border-brand/30 bg-brand-muted/40 p-6 backdrop-blur-md">
+                <p className="flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] text-brand uppercase">
+                  <span aria-hidden="true" className="animate-led size-2 rounded-full bg-brand shadow-[0_0_10px_var(--brand)]" />
+                  Available
+                </p>
+                <p className="font-display-wide mt-4 text-xl leading-snug font-bold">
+                  Freelance projects — mobile, web &amp; backend.
+                </p>
+                <p className="mt-4 font-mono text-xs text-muted-foreground">
+                  {profile.location} · <LocalTime /> MYT
+                </p>
+              </div>
+            </TiltCard>
 
             {/* Direct lines */}
             <div className="rounded-2xl border border-border bg-card/60 p-6 backdrop-blur-sm">

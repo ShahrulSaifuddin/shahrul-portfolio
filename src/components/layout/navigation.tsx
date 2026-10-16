@@ -10,6 +10,7 @@ import { Container } from '@/components/layout/container'
 import { MobileNav } from '@/components/layout/mobile-nav'
 import { ThemeToggle } from '@/components/layout/theme-toggle'
 import { GitHubIcon } from '@/components/layout/icons'
+import { RollLabel } from '@/components/fx/roll-label'
 import { cn } from '@/lib/utils'
 import { siteConfig } from '@/lib/site'
 import { profile } from '@/lib/data/profile'
@@ -128,10 +129,14 @@ export function Navigation(): React.ReactElement {
             </div>
             <Link
               href="/contact"
-              className="ml-1 hidden h-10 items-center gap-1.5 rounded-full bg-foreground px-4 text-sm font-semibold text-background transition-colors hover:bg-brand hover:text-brand-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none lg:inline-flex"
+              className="group ml-1 hidden h-10 items-center gap-1.5 rounded-full bg-foreground px-4 text-sm font-semibold text-background transition-colors duration-300 hover:bg-brand hover:text-brand-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none active:scale-[0.97] lg:inline-flex"
             >
-              Let&apos;s talk
-              <ArrowUpRight aria-hidden="true" className="size-3.5" />
+              <span aria-hidden="true" className="relative flex size-1.5">
+                <span className="absolute inline-flex size-full rounded-full bg-brand opacity-70 group-hover:bg-brand-foreground motion-safe:animate-ping" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-brand group-hover:bg-brand-foreground" />
+              </span>
+              <RollLabel>Hire me</RollLabel>
+              <ArrowUpRight aria-hidden="true" className="size-3.5 transition-transform duration-500 group-hover:rotate-45" />
             </Link>
             <MobileNav links={NAV_LINKS} githubHref={profile.github} />
           </div>

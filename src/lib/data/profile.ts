@@ -19,6 +19,19 @@ export const profile = {
 } as const satisfies Profile
 
 /**
+ * Freelance positioning. Kept apart from `profile` (which mirrors the résumé)
+ * so the hiring pitch can change without touching résumé facts.
+ */
+export const freelance = {
+  status: 'Available for freelance projects',
+  role: 'Freelance full-stack engineer',
+  pitch:
+    'From the first screen to the payment gateway and the server it runs on. Five years in production across EV charging, fintech and event ticketing — with two apps live on the App Store and Google Play.',
+  builds: ['mobile apps', 'web platforms', 'APIs & backends', 'payment integrations'],
+  whatsapp: `https://wa.me/${profile.phone.replace(/\D/g, '')}`,
+} as const
+
+/**
  * The four headline stats for the hero metric rail. Exactly these four —
  * do not add more without a corresponding fact in the content brief.
  */

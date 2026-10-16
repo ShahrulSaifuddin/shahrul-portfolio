@@ -9,7 +9,7 @@ export const siteConfig = {
   name: 'Shahrul Saifuddin',
   title: 'Shahrul Saifuddin — Full-Stack Engineer',
   description:
-    'Full-stack engineer with 5 years shipping production mobile and web systems across EV charging, fintech and event ticketing — React Native and React front ends, Laravel and Node.js APIs, and CI/CD onto Linux VPS infrastructure.',
+    'Freelance full-stack engineer in Kuala Lumpur with 5 years shipping production mobile and web systems across EV charging, fintech and event ticketing — React Native apps, React and Next.js sites, Laravel and Node.js APIs, and payment integrations.',
   // Placeholder — the owner should point this at the real production domain
   // before deploying. Not supplied by the content brief.
   url: 'https://shahrulsaifuddin.com',

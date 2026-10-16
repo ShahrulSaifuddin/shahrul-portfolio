@@ -24,7 +24,7 @@ export function Footer(): React.ReactElement {
           <p className="font-mono text-[11px] tracking-[0.22em] text-muted-foreground uppercase">Currently</p>
           <p className="font-display-wide max-w-[24ch] text-2xl leading-tight font-bold">
             {profile.title} in {profile.location.split(',')[0]} —{' '}
-            <span className="font-serif font-normal text-brand italic">open to new roles.</span>
+            <span className="font-serif font-normal text-brand italic">available for freelance.</span>
           </p>
           <p className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
             <span className="animate-led size-1.5 rounded-full bg-brand" />
@@ -90,7 +90,7 @@ export function Footer(): React.ReactElement {
         <p>
           © {year} {profile.displayName}
         </p>
-        <p>Next.js · Three.js · Rapier · Framer Motion · React Bits</p>
+        <p>Next.js · Three.js · GLSL · Framer Motion</p>
       </Container>
     </footer>
   )

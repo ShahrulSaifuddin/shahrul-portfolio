@@ -23,7 +23,7 @@ export function Education() {
       <Container>
         <SectionHeader
           id="education"
-          index="05"
+          index="07"
           eyebrow="Foundation"
           title="Where the current started."
           accent={['current']}

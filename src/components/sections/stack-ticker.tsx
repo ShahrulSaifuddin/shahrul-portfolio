@@ -24,36 +24,40 @@ function Sep() {
 /**
  * The band between the hero and About: two counter-running rows of the stack
  * whose speed and lean follow how fast you scroll. Decorative (the real,
- * grouped list is in the Skills section).
+ * grouped list is in the Skills section). The band is tilted and wider than
+ * the screen so its ends never show; the outer wrapper clips it so it adds no
+ * horizontal scroll.
  */
 export function StackTicker() {
   return (
-    <div className="relative border-y border-border bg-background py-8 sm:py-10">
-      <VelocityMarquee
-        velocity={40}
-        className="space-y-3 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]"
-        rowClassName="items-center"
-        rows={[
-          <React.Fragment key="primary">
-            {PRIMARY.map((w) => (
-              <span key={w} className="flex items-center">
-                <span className="font-display-wide text-4xl font-extrabold uppercase sm:text-6xl">{w}</span>
-                <Sep />
-              </span>
-            ))}
-          </React.Fragment>,
-          <React.Fragment key="secondary">
-            {SECONDARY.map((w) => (
-              <span key={w} className="flex items-center">
-                <span className="font-display-wide text-outline text-3xl font-extrabold uppercase sm:text-5xl">
-                  {w}
+    <div className="relative overflow-hidden py-6">
+      <div className="relative -mx-[5%] w-[110%] -rotate-[1.5deg] border-y border-border bg-background/80 py-8 sm:py-10">
+        <VelocityMarquee
+          velocity={40}
+          className="space-y-3 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]"
+          rowClassName="items-center"
+          rows={[
+            <React.Fragment key="primary">
+              {PRIMARY.map((w) => (
+                <span key={w} className="flex items-center">
+                  <span className="font-display-wide text-4xl font-extrabold uppercase sm:text-6xl">{w}</span>
+                  <Sep />
                 </span>
-                <span className="mx-5 inline-block size-2 rounded-full bg-border sm:mx-8" />
-              </span>
-            ))}
-          </React.Fragment>,
-        ]}
-      />
+              ))}
+            </React.Fragment>,
+            <React.Fragment key="secondary">
+              {SECONDARY.map((w) => (
+                <span key={w} className="flex items-center">
+                  <span className="font-display-wide text-outline text-3xl font-extrabold uppercase sm:text-5xl">
+                    {w}
+                  </span>
+                  <span className="mx-5 inline-block size-2 rounded-full bg-border sm:mx-8" />
+                </span>
+              ))}
+            </React.Fragment>,
+          ]}
+        />
+      </div>
     </div>
   )
 }

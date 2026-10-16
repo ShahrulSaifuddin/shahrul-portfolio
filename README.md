@@ -20,20 +20,29 @@ skills, experience, education, the performance checklist) lives in a typed data 
 - **Framer Motion 13.4.0** for scroll-linked motion (pinned horizontal gallery, scrubbed text,
   timeline wire), entrances and hover states — every animation respects `prefers-reduced-motion`.
 - **Lenis** inertial wheel scrolling (skipped under reduced motion; touch keeps native scroll).
-- **three.js + @react-three/fiber + drei + @react-three/rapier** for the draggable 3D ID badge in
-  the hero (desktop only, loaded with `next/dynamic` after the boot screen).
-- **React Bits** (reactbits.dev) components, adapted in `src/components/fx/`: Lightning,
-  ElectricBorder, Lanyard, ScrollVelocity, ClickSpark, SpotlightCard, Magnet, RotatingText,
-  DecryptedText and ScrollReveal — each reworked to pause offscreen and honour reduced motion.
+- **three.js + @react-three/fiber** for the home page's particle swarm — one fixed WebGL canvas
+  behind every section, custom GLSL, loaded with `next/dynamic` after the loader and never under
+  reduced motion or without WebGL.
+- **React Bits** (reactbits.dev) components, adapted in `src/components/fx/`: ScrollVelocity,
+  ClickSpark, SpotlightCard, Magnet, RotatingText, TextPressure, DecryptedText and ScrollReveal —
+  each reworked to pause offscreen and honour reduced motion.
 
-### Design: "Live Wire"
+### Design: "Swarm"
 
-The site is a circuit you power up by scrolling — a nod to the EEE degree and the EV-charging work.
-A once-per-session boot screen plays a charge-point handshake; the hero name ignites like neon;
-scroll progress is shown as a battery "state of charge" (bottom-left) with a circuit rail of
-section nodes (left edge, `xl+`). Typefaces: Archivo (variable width, run at 125% for display),
-Geist, Geist Mono and Instrument Serif italic for accent words. The hero and closing CTA are
-forced-dark "islands" in both themes.
+A freelance portfolio built to hold attention. Up to 18,000 GPU particles (fewer on phones)
+follow the visitor down the page like a school of fish, re-forming for each section: an energy
+core (hero), a system lattice (services), a smartphone that swims behind the project coverflow,
+a rolling ocean (about, process), a galaxy (skills), a DNA helix (career) and a portal around the
+final CTA. Scrolling up reverses every morph. The swarm is interactive — it parts around the
+cursor, a click fires a shockwave, press-and-hold pulls particles into a vortex that explodes on
+release, a drag spins it, and the hero has a shape switcher.
+
+Waypoints and poses live in `src/components/scene/scene-anchors.ts`; shapes in
+`formations.ts`. Around it: a counter loader that opens like an iris, 3D letter-flip entrances,
+scroll-linked perspective reveals, hover-tilt cards, a pinned 3D coverflow gallery (desktop) and a
+stacking card deck (phones), a sticky "Hire me" bar on phones, and a "LET'S TALK" headline whose
+variable-font letters swell toward the cursor. Typefaces: Archivo (variable width and weight),
+Geist, Geist Mono and Instrument Serif italic for accent words.
 - **Resend** for contact-form email delivery, **Zod** + **react-hook-form** for validation.
 - **next/og** (`ImageResponse`) for the generated Open Graph image.
 
@@ -42,7 +51,8 @@ forced-dark "islands" in both themes.
 ```
 src/
   app/
-    page.tsx                  Home: hero, about, featured projects, skills, experience, education
+    page.tsx                  Home: hero, services, projects, about, process, skills, experience,
+                              education, contact
     projects/page.tsx         All projects, with tech filter + search
     projects/[slug]/page.tsx  Full case study per project
     performance/page.tsx      19-item optimization checklist with live demos
@@ -60,13 +70,15 @@ src/
     contact/                  Contact form
     performance/              Checklist + live demo components (debounce, skeleton, pagination, ...)
     motion/                   Shared `Reveal` scroll-entrance wrapper
-    fx/                       Effects layer: boot screen, charge HUD, Lenis, sparks, cursor,
-                              adapted React Bits components, and lanyard/ (3D badge + its
-                              runtime-painted card texture)
+    scene/                    The WebGL particle swarm: formations, per-section anchors, shaders,
+                              the hero shape switcher
+    fx/                       Effects layer: loader, charge HUD, Lenis, sparks, cursor, tilt and
+                              perspective wrappers, and adapted React Bits components
     providers/                Theme provider
     ui/                       shadcn/ui primitives (read-only, do not hand-edit)
   lib/
-    data/                     Typed content: profile, projects, skills, experience, education, performance
+    data/                     Typed content: profile, projects, services, skills, experience,
+                              education, performance
     site.ts                   Site-wide config: name, description, canonical URL, nav, social links
     types.ts                  Shared TypeScript types for the content layer
     email.ts                  Resend integration for the contact form
@@ -75,8 +87,6 @@ src/
     motion.ts                 Shared Framer Motion easing/duration constants
 public/
   images/profile.jpg                        Profile photo
-  3d/card.glb                               Badge model (from React Bits' Lanyard; embedded
-                                            texture stripped — the card art is painted at runtime)
   Shahrul_Saifuddin_Resume_2026.pdf          Downloadable resume
 ```
 

@@ -1,148 +1,134 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowDownRight, ArrowUpRight, Download } from 'lucide-react'
+import { ArrowDown, ArrowUpRight } from 'lucide-react'
 
 import { Container } from '@/components/layout/container'
 import { MetricRail } from '@/components/layout/metric-rail'
 import { Magnetic } from '@/components/fx/magnetic'
-import { NeonText } from '@/components/fx/neon-text'
+import { HeroName } from '@/components/fx/hero-name'
 import { Reveal } from '@/components/motion/reveal'
+import { RollLabel } from '@/components/fx/roll-label'
 import { RotatingWord } from '@/components/fx/rotating-word'
-import { HeroBadgeCanvas, HeroBadgeProvider, HeroPortrait } from '@/components/fx/lanyard/hero-badge'
-import { HeroBackdrop } from '@/components/sections/hero-backdrop'
 import { LocalTime } from '@/components/fx/local-time'
-import { heroMetrics, profile } from '@/lib/data/profile'
+import { ShapeSwitcher } from '@/components/scene/shape-switcher'
+import { freelance, heroMetrics, profile } from '@/lib/data/profile'
 
-// Derived, not invented: the first sentence of the verbatim profile summary.
-const [heroPositioningLine] = profile.summary.split(/(?<=\.)\s+/)
 const [firstName, lastName] = profile.displayName.split(' ')
 
-const ROTATING = ['React Native', 'Laravel', 'Node.js', 'OCPP 1.6 / 2.0', 'payment rails'] as const
-
-const BADGE = {
-  firstName,
-  lastName,
-  title: profile.title,
-  location: profile.location,
-  email: profile.email,
-  github: profile.github,
-  photoSrc: '/images/profile.jpg',
-}
-
 /**
- * A forced-dark "island" in both themes (`class="dark"`): the lab is always
- * dark. Layers, back to front: lightning backdrop → giant neon name → the
- * physics badge (desktop) → copy, CTAs and the instrument-panel metrics.
+ * Transparent on purpose: the particle swarm (SceneBackdrop, fixed behind
+ * the page) is the hero's visual. Layers: giant 3D-flipping name → pitch and
+ * CTAs → shape switcher → instrument-panel metrics.
  */
 export function Hero() {
   return (
     <section
       id="top"
-      data-hud="Power on"
+      data-hud="Hello"
       aria-label="Introduction"
-      className="dark relative isolate overflow-hidden bg-background text-foreground"
+      className="relative isolate overflow-hidden"
     >
-      <HeroBackdrop />
-
-      <HeroBadgeProvider data={BADGE}>
-        {/* 3D badge layer: right half, full hero height so the strap hangs
-            from the top edge. Above the name, below the copy. */}
-        <HeroBadgeCanvas className="absolute inset-y-0 right-0 z-10 hidden w-[46%] lg:block" />
-
-        <Container className="pointer-events-none relative z-20 flex min-h-[100svh] flex-col pt-28 pb-12 sm:pt-32">
-          <div className="pointer-events-auto flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] tracking-[0.18em] text-muted-foreground uppercase">
-            <span className="flex items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1.5 backdrop-blur">
-              <span className="animate-led size-1.5 rounded-full bg-brand shadow-[0_0_8px_var(--brand)]" />
-              Open to full-stack, mobile &amp; backend roles
+      <Container className="relative flex min-h-[100svh] flex-col pt-24 pb-10 sm:pt-28">
+        <div className="text-muted-foreground flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] tracking-[0.16em] uppercase">
+          <span className="border-border bg-background/60 flex items-center gap-2.5 rounded-full border py-1 pr-4 pl-1 backdrop-blur-md">
+            <span className="ring-border relative size-8 overflow-hidden rounded-full ring-1">
+              <Image
+                src="/images/profile.jpg"
+                alt=""
+                fill
+                sizes="32px"
+                priority
+                className="object-cover object-top"
+              />
             </span>
-            <span className="hidden sm:inline">
-              {profile.location} · <LocalTime /> MYT
+            <span aria-hidden="true" className="relative flex size-2">
+              <span className="bg-brand absolute inline-flex size-full rounded-full opacity-60 motion-safe:animate-ping" />
+              <span className="bg-brand relative inline-flex size-2 rounded-full" />
             </span>
-          </div>
+            <span className="text-foreground">
+              {freelance.status.replace(/ projects$/, '')}
+              <span className="max-sm:hidden"> projects</span>
+            </span>
+          </span>
+          <span className="hidden sm:inline">
+            {profile.location} · <LocalTime /> MYT
+          </span>
+        </div>
 
-          <h1 className="mt-10 sm:mt-14">
-            <span className="sr-only">{profile.displayName}</span>
-            <NeonText
-              className="font-display-wide block text-[clamp(2.1rem,10vw,7.5rem)] leading-[0.88] font-extrabold whitespace-nowrap uppercase sm:text-[clamp(2.1rem,8.6vw,7.5rem)]"
-              lines={[
-                { text: firstName },
-                {
-                  text: lastName,
-                  className: 'sm:pl-[0.9em]',
-                  style: { '--neon-color': 'var(--brand)' } as React.CSSProperties,
-                },
-              ]}
-            />
-          </h1>
+        <h1 className="mt-12 sm:mt-10">
+          <span className="sr-only">{profile.displayName}</span>
+          <HeroName
+            className="font-display-wide text-[12.2vw] leading-[0.86] font-extrabold uppercase sm:text-[10.6vw] lg:text-[clamp(4rem,10vw,8.75rem)]"
+            lines={[
+              { text: firstName },
+              {
+                text: lastName,
+                className: 'text-brand [text-shadow:0_0_60px_var(--glow)] sm:pl-[0.7em]',
+              },
+            ]}
+          />
+        </h1>
 
-          <div className="mt-10 grid flex-1 items-end gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16">
-            <Reveal delay={0.2} className="pointer-events-auto order-2 lg:order-1">
-              <p className="font-display-wide text-xl font-semibold tracking-[-0.02em] sm:text-2xl">
-                {profile.title}
-                <span className="text-muted-foreground"> / </span>
-                <RotatingWord words={ROTATING} className="text-brand" />
-              </p>
-              <p className="mt-5 max-w-[56ch] text-base leading-relaxed text-muted-foreground sm:text-lg">
-                {heroPositioningLine}
-              </p>
+        <div className="mt-10 grid flex-1 items-end gap-8 sm:mt-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
+          <Reveal delay={0.25}>
+            <p className="font-display-wide text-xl leading-tight font-semibold tracking-[-0.02em] sm:text-2xl">
+              {freelance.role}.
+              <br />
+              <span className="text-muted-foreground">I build </span>
+              <RotatingWord
+                words={freelance.builds}
+                className="text-brand font-serif font-normal tracking-normal italic"
+              />
+            </p>
+            <p className="text-muted-foreground mt-5 max-w-[54ch] text-[0.98rem] leading-relaxed sm:text-lg">
+              {freelance.pitch}
+            </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Magnetic>
-                  <Link
-                    href="/projects"
-                    data-cursor="Open"
-                    className="group inline-flex h-13 items-center gap-2 rounded-full bg-brand px-7 text-sm font-semibold text-brand-foreground shadow-[0_0_0_1px_var(--brand),0_10px_40px_-10px_var(--brand)] transition-transform focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
-                  >
-                    View projects
-                    <ArrowUpRight aria-hidden="true" className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </Link>
-                </Magnetic>
-                <Magnetic>
-                  <a
-                    href={profile.resumeUrl}
-                    download
-                    aria-label="Download resume (PDF)"
-                    className="inline-flex h-13 items-center gap-2 rounded-full border border-border bg-background/50 px-6 text-sm font-medium backdrop-blur transition-colors hover:border-brand/60 hover:text-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
-                  >
-                    <Download aria-hidden="true" className="size-4" />
-                    Résumé
-                  </a>
-                </Magnetic>
+            <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:items-center">
+              <Magnetic className="block sm:inline-block">
                 <Link
                   href="/contact"
-                  className="inline-flex h-13 items-center px-3 text-sm font-medium text-muted-foreground underline-offset-8 transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                  data-cursor="Let's go"
+                  className="group bg-brand text-brand-foreground focus-visible:ring-ring focus-visible:ring-offset-background relative flex h-14 items-center justify-between gap-3 overflow-hidden rounded-full pr-2 pl-7 text-sm font-semibold shadow-[0_0_0_1px_var(--brand),0_14px_44px_-12px_var(--brand)] transition-shadow duration-500 hover:shadow-[0_0_0_1px_var(--brand),0_18px_60px_-10px_var(--brand)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.98] sm:inline-flex sm:justify-start"
                 >
-                  Get in touch
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 -translate-x-full bg-[linear-gradient(100deg,transparent,oklch(1_0_0/0.35),transparent)] transition-transform duration-700 group-hover:translate-x-full"
+                  />
+                  <RollLabel>Start a project</RollLabel>
+                  <span className="bg-brand-foreground text-brand flex size-10 items-center justify-center rounded-full transition-transform duration-500 group-hover:rotate-45">
+                    <ArrowUpRight aria-hidden="true" className="size-4" />
+                  </span>
                 </Link>
-              </div>
-            </Reveal>
-
-            <div className="pointer-events-auto order-1 flex justify-center lg:order-2 lg:justify-end lg:pr-10">
-              <HeroPortrait name={profile.displayName} initials={profile.avatarInitials} />
+              </Magnetic>
+              <Magnetic className="block sm:inline-block">
+                <a
+                  href="#projects"
+                  className="group border-border bg-background/50 hover:border-foreground/40 focus-visible:ring-ring focus-visible:ring-offset-background flex h-14 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium backdrop-blur-md transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.98] sm:inline-flex"
+                >
+                  <RollLabel>See my work</RollLabel>
+                  <ArrowDown
+                    aria-hidden="true"
+                    className="size-4 transition-transform duration-500 group-hover:translate-y-0.5"
+                  />
+                </a>
+              </Magnetic>
             </div>
-          </div>
-
-          <Reveal delay={0.35} className="pointer-events-auto mt-12">
-            {/*
-              Deliberately NOT `countUp`: these are factual claims about a
-              person's career, and counting from 0 means the hero briefly reads
-              "0 Products live on App Store & Google Play". The numbers light
-              up with the section instead. See e2e/hero-metrics.spec.ts.
-            */}
-            <MetricRail metrics={heroMetrics} />
           </Reveal>
 
-          <a
-            href="#about"
-            className="pointer-events-auto mt-10 inline-flex items-center gap-3 self-start font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase transition-colors hover:text-brand"
-          >
-            <span className="relative flex h-9 w-5 justify-center rounded-full border border-border">
-              <span className="mt-1.5 h-2 w-0.5 rounded-full bg-brand motion-safe:animate-bounce" />
-            </span>
-            Scroll to charge
-            <ArrowDownRight aria-hidden="true" className="size-3.5" />
-          </a>
-        </Container>
-      </HeroBadgeProvider>
+          <ShapeSwitcher className="lg:justify-self-end" />
+        </div>
+
+        <Reveal delay={0.4} className="mt-10 sm:mt-12">
+          {/*
+            Deliberately NOT `countUp`: these are factual claims about a
+            person's career, and counting from 0 means the hero briefly reads
+            "0 Products live on App Store & Google Play". See
+            e2e/hero-metrics.spec.ts.
+          */}
+          <MetricRail metrics={heroMetrics} />
+        </Reveal>
+      </Container>
     </section>
   )
 }

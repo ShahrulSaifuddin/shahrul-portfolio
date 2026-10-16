@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 
 import { SpotlightCard } from '@/components/fx/spotlight-card'
+import { TiltCard } from '@/components/fx/tilt-card'
 import { cardHoverSpring } from '@/lib/motion'
 import type { Project } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -42,66 +43,68 @@ function ProjectCardImpl({ project, className }: { project: Project; className?:
       whileHover={shouldReduceMotion ? undefined : { y: -4 }}
       transition={cardHoverSpring}
     >
-      <SpotlightCard as="article" className="flex h-full flex-col p-6 sm:p-8">
-        <div className="flex items-center justify-between gap-4 font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
-          <span className="flex items-center gap-2">
-            <span className="animate-led size-1.5 rounded-full bg-brand" />
-            {project.status}
-          </span>
-          <ArrowUpRight
-            aria-hidden="true"
-            className="size-5 transition-all duration-500 group-hover/spot:translate-x-0.5 group-hover/spot:-translate-y-0.5 group-hover/spot:text-brand"
-          />
-        </div>
-
-        <h3 className="font-display-wide mt-6 text-2xl leading-tight font-bold sm:text-3xl">
-          {/* Stretched-link overlay: this is the ONLY link in the card, so the
-              card is a single tab stop. `after:inset-0` covers the whole
-              relatively-positioned card; the visible text stays inline here. */}
-          <Link
-            href={`/projects/${project.slug}`}
-            data-cursor="View"
-            className="rounded-sm after:absolute after:inset-0 after:z-20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
+      <TiltCard className="h-full rounded-2xl" max={7}>
+        <SpotlightCard as="article" className="flex h-full flex-col p-6 sm:p-8">
+          <div className="flex items-center justify-between gap-4 font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+            <span className="flex items-center gap-2">
+              <span className="animate-led size-1.5 rounded-full bg-brand" />
+              {project.status}
+            </span>
+            <ArrowUpRight
+              aria-hidden="true"
+              className="size-5 transition-all duration-500 group-hover/spot:translate-x-0.5 group-hover/spot:-translate-y-0.5 group-hover/spot:text-brand"
+            />
+          </div>
+  
+          <h3 className="font-display-wide mt-6 text-2xl leading-tight font-bold sm:text-3xl">
+            {/* Stretched-link overlay: this is the ONLY link in the card, so the
+                card is a single tab stop. `after:inset-0` covers the whole
+                relatively-positioned card; the visible text stays inline here. */}
+            <Link
+              href={`/projects/${project.slug}`}
+              data-cursor="View"
+              className="rounded-sm after:absolute after:inset-0 after:z-20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
+            >
+              {project.name}
+            </Link>
+          </h3>
+          <p className="mt-2 text-muted-foreground">{project.subtitle}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{project.role}</p>
+  
+          <div
+            className={cn(
+              'mt-6 grid gap-3 border-y border-border py-5',
+              METRIC_GRID_COLS[visibleMetrics.length] ?? 'grid-cols-3',
+            )}
           >
-            {project.name}
-          </Link>
-        </h3>
-        <p className="mt-2 text-muted-foreground">{project.subtitle}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{project.role}</p>
-
-        <div
-          className={cn(
-            'mt-6 grid gap-3 border-y border-border py-5',
-            METRIC_GRID_COLS[visibleMetrics.length] ?? 'grid-cols-3',
-          )}
-        >
-          {visibleMetrics.map((metric) => (
-            <div key={metric.label}>
-              <p className="font-display-wide text-xl font-bold tabular-nums sm:text-2xl">{metric.value}</p>
-              <p className="mt-1 text-[11px] leading-snug text-muted-foreground">{metric.label}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-auto flex flex-wrap gap-1.5 pt-6">
-          {visibleTech.map((tech) => (
-            <span
-              key={tech}
-              className="rounded-full border border-border bg-background/60 px-2.5 py-1 font-mono text-[11px] text-muted-foreground"
-            >
-              {tech}
-            </span>
-          ))}
-          {overflowTechCount > 0 && (
-            <span
-              className="rounded-full border border-border bg-background/60 px-2.5 py-1 font-mono text-[11px] text-muted-foreground"
-              aria-label={`plus ${overflowTechCount} more technologies`}
-            >
-              +{overflowTechCount}
-            </span>
-          )}
-        </div>
-      </SpotlightCard>
+            {visibleMetrics.map((metric) => (
+              <div key={metric.label}>
+                <p className="font-display-wide text-xl font-bold tabular-nums sm:text-2xl">{metric.value}</p>
+                <p className="mt-1 text-[11px] leading-snug text-muted-foreground">{metric.label}</p>
+              </div>
+            ))}
+          </div>
+  
+          <div className="mt-auto flex flex-wrap gap-1.5 pt-6">
+            {visibleTech.map((tech) => (
+              <span
+                key={tech}
+                className="rounded-full border border-border bg-background/60 px-2.5 py-1 font-mono text-[11px] text-muted-foreground"
+              >
+                {tech}
+              </span>
+            ))}
+            {overflowTechCount > 0 && (
+              <span
+                className="rounded-full border border-border bg-background/60 px-2.5 py-1 font-mono text-[11px] text-muted-foreground"
+                aria-label={`plus ${overflowTechCount} more technologies`}
+              >
+                +{overflowTechCount}
+              </span>
+            )}
+          </div>
+        </SpotlightCard>
+      </TiltCard>
     </motion.div>
   )
 }

@@ -6,6 +6,9 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { MetricRail } from '@/components/layout/metric-rail'
 import { ProjectVisual } from '@/components/projects/project-visual'
+import { Perspective } from '@/components/fx/perspective'
+import { RevealWords } from '@/components/fx/reveal-words'
+import { TiltCard } from '@/components/fx/tilt-card'
 import { getProjectBySlug, projects } from '@/lib/data/projects'
 import { siteConfig } from '@/lib/site'
 import type { ProjectSlug } from '@/lib/types'
@@ -92,7 +95,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </span>
 
         <h1 className="font-display-wide mt-6 text-[clamp(2.75rem,8vw,6rem)] leading-[0.92] font-extrabold">
-          {project.name}
+          <RevealWords text={project.name} />
         </h1>
         <p className="mt-4 text-lg text-muted-foreground sm:text-xl">{project.subtitle}</p>
 
@@ -170,17 +173,20 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </h2>
         <ol className="mt-10 grid gap-5 md:grid-cols-2">
           {project.highlights.map((highlight, i) => (
-            <li
-              key={highlight}
-              className="relative rounded-2xl border border-border bg-card/60 p-6 pt-14 leading-relaxed text-muted-foreground sm:p-8 sm:pt-16"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute top-5 left-6 font-mono text-[11px] tracking-[0.2em] text-brand sm:left-8"
-              >
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              {highlight}
+            <li key={highlight}>
+              <Perspective depth={0.7} className="h-full">
+                <TiltCard className="h-full rounded-2xl" max={6}>
+                  <div className="relative h-full rounded-2xl border border-border bg-card/70 p-6 pt-14 leading-relaxed text-muted-foreground backdrop-blur-md transition-colors duration-500 hover:border-brand/40 sm:p-8 sm:pt-16">
+                    <span
+                      aria-hidden="true"
+                      className="absolute top-5 left-6 font-mono text-[11px] tracking-[0.2em] text-brand sm:left-8"
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    {highlight}
+                  </div>
+                </TiltCard>
+              </Perspective>
             </li>
           ))}
         </ol>
@@ -206,30 +212,34 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </section>
 
       <nav aria-label="More projects" className="mt-28 grid gap-4 border-t border-border pt-10 sm:grid-cols-2">
-        <Link
-          href={`/projects/${previousProject.slug}`}
-          className="group rounded-2xl border border-border p-6 transition-colors hover:border-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none sm:p-8"
-        >
-          <span className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
-            <ArrowLeft aria-hidden="true" className="size-3.5 transition-transform group-hover:-translate-x-1" />
-            Previous
-          </span>
-          <span className="font-display-wide mt-3 block text-2xl font-bold transition-colors group-hover:text-brand sm:text-3xl">
-            {previousProject.name}
-          </span>
-        </Link>
-        <Link
-          href={`/projects/${nextProject.slug}`}
-          className="group rounded-2xl border border-border p-6 text-right transition-colors hover:border-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none sm:p-8"
-        >
-          <span className="flex items-center justify-end gap-1.5 font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
-            Next
-            <ArrowRight aria-hidden="true" className="size-3.5 transition-transform group-hover:translate-x-1" />
-          </span>
-          <span className="font-display-wide mt-3 block text-2xl font-bold transition-colors group-hover:text-brand sm:text-3xl">
-            {nextProject.name}
-          </span>
-        </Link>
+        <TiltCard className="rounded-2xl" max={8}>
+          <Link
+            href={`/projects/${previousProject.slug}`}
+            className="group block rounded-2xl border border-border bg-background/50 p-6 backdrop-blur-md transition-colors hover:border-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none sm:p-8"
+          >
+            <span className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
+              <ArrowLeft aria-hidden="true" className="size-3.5 transition-transform group-hover:-translate-x-1" />
+              Previous
+            </span>
+            <span className="font-display-wide mt-3 block text-2xl font-bold transition-colors group-hover:text-brand sm:text-3xl">
+              {previousProject.name}
+            </span>
+          </Link>
+        </TiltCard>
+        <TiltCard className="rounded-2xl" max={8}>
+          <Link
+            href={`/projects/${nextProject.slug}`}
+            className="group block rounded-2xl border border-border bg-background/50 p-6 text-right backdrop-blur-md transition-colors hover:border-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none sm:p-8"
+          >
+            <span className="flex items-center justify-end gap-1.5 font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
+              Next
+              <ArrowRight aria-hidden="true" className="size-3.5 transition-transform group-hover:translate-x-1" />
+            </span>
+            <span className="font-display-wide mt-3 block text-2xl font-bold transition-colors group-hover:text-brand sm:text-3xl">
+              {nextProject.name}
+            </span>
+          </Link>
+        </TiltCard>
       </nav>
     </Container>
   )

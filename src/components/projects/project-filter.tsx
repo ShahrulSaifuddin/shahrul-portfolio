@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Search, SlidersHorizontal, X } from 'lucide-react'
 
 import { ProjectCard } from '@/components/projects/project-card'
+import { Perspective } from '@/components/fx/perspective'
 import { useDebouncedValue } from '@/components/projects/use-debounced-value'
 import { Button } from '@/components/ui/button'
 import type { Project } from '@/lib/types'
@@ -184,7 +185,9 @@ export function ProjectFilter({ projects, allTech }: ProjectFilterProps) {
                 exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, filter: 'blur(6px)' }}
                 transition={{ type: 'spring', stiffness: 320, damping: 32 }}
               >
-                <ProjectCard project={project} />
+                <Perspective depth={0.6} className="h-full">
+                  <ProjectCard project={project} />
+                </Perspective>
               </motion.div>
             ))}
           </AnimatePresence>
